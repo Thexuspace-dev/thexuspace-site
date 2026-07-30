@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visual &amp; Audio — TheXuSpace</title>
+<meta name="description" content="Visual & Audio — live audio-reactive visuals, TheXuSpace.">
+<style>
+  :root{ --bg:#050505; --text:#f2f2f2; --text-dim:#8a8a8a; --accent:#ff2e63; }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;background:var(--bg);overflow:hidden;}
+  body{color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;}
+  a{color:inherit;text-decoration:none;}
+
+  header.nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:18px clamp(20px,5vw,56px);mix-blend-mode:difference;}
+  .nav-logo{font-weight:700;font-size:15px;letter-spacing:.04em;}
+  .nav-links{display:none;gap:22px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;}
+  @media(min-width:800px){.nav-links{display:flex;}}
+  .nav-links a.current{color:var(--accent);}
+
+  canvas{position:fixed;inset:0;z-index:1;display:block;}
+
+  #gate{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;text-align:center;background:var(--bg);transition:opacity .8s ease;padding:24px;}
+  #gate .eyebrow{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);}
+  #gate h1{font-size:clamp(26px,5vw,44px);font-weight:800;letter-spacing:-.02em;}
+  #gate p{max-width:480px;color:var(--text-dim);font-size:14px;line-height:1.7;}
+  #enterBtn{border:1.5px solid var(--text);color:var(--text);background:none;padding:16px 38px;font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .25s ease;}
+  #enterBtn:hover{background:var(--accent);border-color:var(--accent);color:#0a0a0a;}
+  #gate.hidden{opacity:0;pointer-events:none;}
+
+  #hud{position:fixed;bottom:22px;left:0;right:0;z-index:10;display:flex;justify-content:center;align-items:center;gap:16px;opacity:0;transition:opacity .6s ease;}
+  #hud.show{opacity:1;}
+  #hud button{background:none;border:1px solid rgba(255,255,255,.3);color:var(--text);width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:14px;}
+  #hud button:hover{border-color:var(--accent);color:var(--accent);}
+  #hud .label{font-size:11px;color:var(--text-dim);letter-spacing:.08em;text-transform:uppercase;}
+
+  #note{position:fixed;top:80px;left:0;right:0;z-index:10;text-align:center;font-size:11px;color:var(--text-dim);letter-spacing:.03em;padding:0 24px;opacity:0;transition:opacity 1s ease .3s;}
+  #note.show{opacity:1;}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-logo"><a href="index.html">TheXuSpace</a></div>
+  <div class="nav-links">
+    <a href="interior-design.html">Interior Design</a>
+    <a href="photography.html">Photography</a>
+    <a href="visual-audio.html" class="current">Visual &amp; Audio</a>
+    <a href="about.html">About</a>
+  </div>
+</header>
+
+<canvas id="viz"></canvas>
+
+<div id="note">Prototype visualizer — running a generated techno pulse live in your browser. Your real recorded set will replace this once it's added.</div>
+
+<div id="gate">
+  <div class="eyebrow">TheXuSpace</div>
+  <h1>Visual &amp; Audio</h1>
+  <p>A live audio-reactive visual system — built to run your recorded sets and let the visuals move with the music in real time, no video file required. This is a working prototype running a generated pulse; your real set drops in next.</p>
+  <button id="enterBtn">▶ Enter</button>
+  <p style="font-size:11px;color:#555;">Sound on — headphones recommended</p>
+</div>
+
+<div id="hud">
+  <button id="muteBtn" title="Mute/Unmute">🔊</button>
+  <div class="label">Prototype Pulse — 128 BPM</div>
+</div>
+
+<script>
+(function(){
+  const canvas = document.getElementById('viz');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  function resize(){ W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+  resize(); addEventListener('resize', resize);
+
+  const gate = document.getElementById('gate');
+  const enterBtn = document.getElementById('enterBtn');
+  const hud = document.getElementById('hud');
+  const note = document.getElementById('note');
+  const muteBtn = document.getElementById('muteBtn');
+
+  let audioCtx, analyser, freqData, masterGain, muted = false;
+
+  // --- Synthesized techno pulse (stand-in until a real recorded set is added) ---
+  // To use a real set instead: replace this whole block with
+  //   const el = new Audio('assets/audio/set.mp3'); el.loop = true;
+  //   const src = audioCtx.createMediaElementSource(el); src.connect(analyser); el.play();
+  function startSynthLoop(){
+    const bpm = 128;
+    const stepTime = 60 / bpm / 4; // 16th notes
+    let step = 0;
+
+    function kick(t){
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = 'sine';
+      o.frequency.setValueAtTime(120, t);
+      o.frequency.exponentialRampToValueAtTime(38, t + 0.12);
+      g.gain.setValueAtTime(1, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
+      o.connect(g); g.connect(masterGain);
+      o.start(t); o.stop(t + 0.3);
+    }
+    function hat(t, vol){
+      const bufferSize = audioCtx.sampleRate * 0.05;
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for(let i=0;i<bufferSize;i++) data[i] = (Math.random()*2-1);
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+      const hp = audioCtx.createBiquadFilter();
+      hp.type = 'highpass'; hp.frequency.value = 7000;
+      const g = audioCtx.createGain();
+      g.gain.setValueAtTime(vol, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+      noise.connect(hp); hp.connect(g); g.connect(masterGain);
+      noise.start(t); noise.stop(t + 0.06);
+    }
+    function bass(t, freq){
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = 'sawtooth';
+      o.frequency.value = freq;
+      const lp = audioCtx.createBiquadFilter();
+      lp.type = 'lowpass'; lp.frequency.value = 400;
+      g.gain.setValueAtTime(0.25, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + stepTime*0.9);
+      o.connect(lp); lp.connect(g); g.connect(masterGain);
+      o.start(t); o.stop(t + stepTime);
+    }
+
+    const bassNotes = [55, 55, 82.4, 55, 55, 55, 73.4, 65.4];
+    let nextTime = audioCtx.currentTime + 0.1;
+    function scheduler(){
+      while(nextTime < audioCtx.currentTime + 0.2){
+        const s = step % 16;
+        if(s % 4 === 0) kick(nextTime);
+        if(s % 2 === 1) hat(nextTime, s % 4 === 3 ? 0.5 : 0.25);
+        if(s % 8 === 0) bass(nextTime, bassNotes[(step/8|0) % bassNotes.length]);
+        nextTime += stepTime;
+        step++;
+      }
+    }
+    scheduler();
+    return setInterval(scheduler, 60);
+  }
+
+  function initAudio(){
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 256;
+    freqData = new Uint8Array(analyser.frequencyBinCount);
+    masterGain = audioCtx.createGain();
+    masterGain.gain.value = 0.7;
+    masterGain.connect(analyser);
+    analyser.connect(audioCtx.destination);
+    startSynthLoop();
+  }
+
+  enterBtn.addEventListener('click', () => {
+    initAudio();
+    gate.classList.add('hidden');
+    hud.classList.add('show');
+    note.classList.add('show');
+    draw();
+  });
+
+  muteBtn.addEventListener('click', () => {
+    muted = !muted;
+    masterGain.gain.value = muted ? 0 : 0.7;
+    muteBtn.textContent = muted ? '🔇' : '🔊';
+  });
+
+  function draw(){
+    requestAnimationFrame(draw);
+    if(!analyser) return;
+    analyser.getByteFrequencyData(freqData);
+
+    const bass = avg(freqData, 0, 8) / 255;
+    const mid  = avg(freqData, 8, 40) / 255;
+    const treble = avg(freqData, 40, 100) / 255;
+
+    ctx.fillStyle = 'rgba(5,5,5,0.28)';
+    ctx.fillRect(0,0,W,H);
+
+    const cx = W/2, cy = H/2;
+
+    // pulsing core ring, driven by bass (the "kick")
+    const baseR = Math.min(W,H) * 0.14;
+    const r = baseR + bass * baseR * 1.8;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI*2);
+    ctx.strokeStyle = `rgba(255,46,99,${0.35 + bass*0.5})`;
+    ctx.lineWidth = 2 + bass*6;
+    ctx.stroke();
+
+    // rotating particle ring, driven by treble (the "hats")
+    const n = 48;
+    const t = performance.now() * 0.0004;
+    for(let i=0;i<n;i++){
+      const a = (i/n) * Math.PI*2 + t;
+      const rad = baseR * 2.1 + mid * 120 + Math.sin(a*3 + t*2) * treble * 60;
+      const x = cx + Math.cos(a) * rad;
+      const y = cy + Math.sin(a) * rad;
+      const size = 1.5 + treble * 5;
+      ctx.beginPath();
+      ctx.arc(x, y, size, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(255,255,255,${0.15 + treble*0.6})`;
+      ctx.fill();
+    }
+
+    // outer frequency arc
+    ctx.beginPath();
+    for(let i=0;i<freqData.length;i++){
+      const a2 = (i/freqData.length) * Math.PI*2;
+      const rad2 = baseR*3.2 + (freqData[i]/255) * 90;
+      const x2 = cx + Math.cos(a2) * rad2;
+      const y2 = cy + Math.sin(a2) * rad2;
+      if(i===0) ctx.moveTo(x2,y2); else ctx.lineTo(x2,y2);
+    }
+    ctx.closePath();
+    ctx.strokeStyle = 'rgba(255,46,99,0.25)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+  function avg(arr, start, end){
+    let s=0; for(let i=start;i<end;i++) s += arr[i];
+    return s / (end-start);
+  }
+
+  // idle background so canvas isn't blank behind the gate
+  ctx.fillStyle = '#050505';
+  ctx.fillRect(0,0,W,H);
+})();
+</script>
+</body>
+</html>

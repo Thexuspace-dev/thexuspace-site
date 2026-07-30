@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Photography — RoamWithPete | TheXuSpace</title>
+<meta name="description" content="Photography by Junde (Peter) Xu — RoamWithPete. AGORA Top 10 Finalist, 2019 & 2020.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#faf7f2; --bg-alt:#f1ebe1; --card:#ffffff; --line:rgba(30,26,20,0.12);
+    --text:#1e1a14; --text-dim:#756b5c; --accent:#a97d4f; --ease:cubic-bezier(0.65,0,0.35,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',Arial,sans-serif;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Fraunces',serif;letter-spacing:-.01em;}
+  a{color:inherit;text-decoration:none;}
+  img{display:block;max-width:100%;}
+
+  header.nav{position:sticky;top:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:18px clamp(20px,5vw,56px);background:rgba(250,247,242,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);}
+  .nav-logo{font-family:'Fraunces',serif;font-weight:600;font-size:17px;}
+  .nav-links{display:flex;gap:24px;align-items:center;}
+  .nav-links a{font-size:13px;color:var(--text-dim);display:none;}
+  @media(min-width:800px){.nav-links a{display:inline-block;}}
+  .nav-links a:hover,.nav-links a.current{color:var(--accent);}
+  .btn{display:inline-flex;padding:10px 20px;border-radius:2px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
+
+  .page-head{padding:70px clamp(20px,6vw,80px) 40px;max-width:760px;}
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:14px;}
+  h1{font-size:clamp(32px,5vw,52px);margin-bottom:16px;}
+  .page-head p{color:var(--text-dim);font-size:16px;line-height:1.8;}
+
+  .gallery{padding:20px clamp(20px,6vw,80px) 90px;column-count:1;column-gap:16px;}
+  @media(min-width:700px){.gallery{column-count:2;}}
+  @media(min-width:1100px){.gallery{column-count:3;}}
+  .g-item{break-inside:avoid;margin-bottom:16px;position:relative;overflow:hidden;border-radius:4px;background:var(--card);border:1px solid var(--line);opacity:0;}
+  .g-item img{width:100%;height:auto;transition:transform .5s var(--ease);}
+  .g-item:hover img{transform:scale(1.04);}
+  .g-item .cap{position:absolute;left:0;right:0;bottom:0;padding:14px 16px;background:linear-gradient(0deg, rgba(20,16,12,.78), transparent);color:#fff;font-size:12px;letter-spacing:.02em;}
+
+  .more-note{max-width:640px;margin:0 auto 80px;padding:0 clamp(20px,6vw,80px);color:var(--text-dim);font-size:14px;line-height:1.7;text-align:center;}
+
+  footer{padding:36px clamp(20px,6vw,80px);border-top:1px solid var(--line);background:var(--bg-alt);font-size:12px;color:var(--text-dim);}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-logo"><a href="index.html">TheXuSpace</a></div>
+  <div class="nav-links">
+    <a href="interior-design.html">Interior Design</a>
+    <a href="photography.html" class="current">Photography</a>
+    <a href="visual-audio.html">Visual &amp; Audio</a>
+    <a class="btn" href="about.html">About</a>
+  </div>
+</header>
+
+<div class="page-head">
+  <div class="eyebrow">RoamWithPete</div>
+  <h1>Photography &amp; Film</h1>
+  <p>A practice in composition and perspective that feeds directly back into the design work — started in 2019. Two images have since placed as AGORA Top 10 Finalists.</p>
+</div>
+
+<div class="gallery">
+  <div class="g-item"><img src="https://raw.githubusercontent.com/TheXuSpace/Design-Portfolio/main/Junde%20Xu%27s%20design%20portfolio%2032.jpeg" alt="Milky Way over Idaho" loading="lazy"><div class="cap">Idaho, 2021</div></div>
+  <div class="g-item"><img src="https://raw.githubusercontent.com/TheXuSpace/Design-Portfolio/main/Junde%20Xu%27s%20design%20portfolio%2033.jpeg" alt="Lighthouse, Maine — AGORA Top 10 Finalist" loading="lazy"><div class="cap">AGORA Top 10 Finalist — Maine, 2020</div></div>
+  <div class="g-item"><img src="https://raw.githubusercontent.com/TheXuSpace/Design-Portfolio/main/Junde%20Xu%27s%20design%20portfolio%2031.jpeg" alt="Aerial farmhouse, RoamWithPete cover" loading="lazy"><div class="cap">RoamWithPete</div></div>
+  <div class="g-item"><img src="https://raw.githubusercontent.com/TheXuSpace/Design-Portfolio/main/Junde%20Xu%27s%20design%20portfolio%2034.jpeg" alt="Seal, Vancouver — AGORA Top 10 Finalist" loading="lazy"><div class="cap">AGORA Top 10 Finalist — Vancouver, 2019</div></div>
+</div>
+
+<p class="more-note">More of the archive is on its way — this gallery grows as new work gets added.</p>
+
+<footer>TheXuSpace · Photography by Junde (Peter) Xu</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+  gsap.registerPlugin(ScrollTrigger);
+  gsap.set('.g-item', { y:24 });
+  ScrollTrigger.batch('.g-item', {
+    start:'top 90%',
+    onEnter: els => gsap.to(els, { opacity:1, y:0, duration:0.7, ease:'power3.out', stagger:0.08 }),
+    once:true
+  });
+</script>
+</body>
+</html>
