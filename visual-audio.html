@@ -30,12 +30,14 @@
   #enterBtn:hover{background:var(--accent);border-color:var(--accent);color:#0a0a0a;}
   #gate.hidden{opacity:0;pointer-events:none;}
 
-  #trackToggle{position:fixed;top:88px;left:clamp(16px,4vw,44px);z-index:16;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(5,5,5,.5);color:var(--text);cursor:pointer;font-size:15px;opacity:0;transition:opacity .6s ease,border-color .2s ease;}
+  #trackToggle{position:fixed;top:88px;left:clamp(16px,4vw,44px);z-index:16;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(5,5,5,.5);color:var(--text);cursor:pointer;font-size:15px;opacity:0;transition:opacity .5s ease,border-color .2s ease;}
   #trackToggle.show{opacity:1;}
+  #trackToggle.show.faded:not(:hover){opacity:.3;}
   #trackToggle:hover{border-color:var(--accent);color:var(--accent);}
 
   #trackPanel{position:fixed;top:138px;left:clamp(16px,4vw,44px);z-index:16;width:220px;max-height:60vh;overflow-y:auto;background:rgba(10,10,10,.72);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:8px;opacity:0;transform:translateX(-8px);pointer-events:none;transition:opacity .3s ease,transform .3s ease;}
   #trackPanel.open{opacity:1;transform:translateX(0);pointer-events:auto;}
+  #trackPanel.open.faded:not(:hover){opacity:.3;}
   #trackPanel .panel-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);padding:6px 8px 8px;}
   .track-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:10px 8px;border-radius:4px;border:none;border-left:2px solid transparent;background:none;color:var(--text-dim);cursor:pointer;font-size:13px;transition:all .2s ease;}
   .track-item:hover{background:rgba(255,255,255,.06);color:var(--text);}
@@ -341,6 +343,8 @@
     const playing = isAudioAudible();
     navHeader.classList.toggle('faded', playing);
     bar.classList.toggle('faded', playing);
+    trackToggle.classList.toggle('faded', playing);
+    trackPanel.classList.toggle('faded', playing);
   }
 
   async function initAudio(){
@@ -400,6 +404,7 @@
   trackToggle.addEventListener('click', () => trackPanel.classList.toggle('open'));
 
   // ===================== Visualizer =====================
+  let wordEnvelope = 0; // fast attack, slow decay — gives the wordmark a trailing fade instead of flickering per-frame
   function draw(){
     requestAnimationFrame(draw);
     if(!analyser) return;
@@ -449,10 +454,16 @@
     ctx.lineWidth = 1;
     ctx.stroke();
 
-    // Center wordmark — accent red, breathing with the bass, opacity
-    // topping out at 70% so the visuals stay readable through it.
-    const wordAlpha = 0.7 * (0.55 + 0.45 * bass);
-    const wordSize = Math.min(W, H) * (0.075 + bass * 0.012);
+    // Center wordmark — accent red at a flat 70% opacity, with a fade-delay
+    // envelope: it snaps up fast on a bass hit, then eases back down slowly
+    // instead of flickering frame to frame with the raw signal.
+    if(bass > wordEnvelope){
+      wordEnvelope = bass;
+    } else {
+      wordEnvelope *= 0.94;
+    }
+    const wordAlpha = 0.7 * (0.5 + 0.5 * wordEnvelope);
+    const wordSize = Math.min(W, H) * (0.075 + wordEnvelope * 0.012);
     ctx.save();
     ctx.font = `800 ${wordSize}px -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif`;
     ctx.textAlign = 'center';
