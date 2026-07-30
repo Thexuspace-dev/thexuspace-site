@@ -33,21 +33,23 @@
   .page-head p{color:var(--text-dim);font-size:16px;line-height:1.8;max-width:520px;}
   .scroll-cue{margin-top:40px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-dim);opacity:.6;}
 
-  .walk{padding:0 0 20px;}
-  .stop{display:flex;flex-direction:column;gap:36px;align-items:center;padding:48px clamp(20px,6vw,80px);max-width:1200px;margin:0 auto;min-height:82vh;justify-content:center;}
-  @media(min-width:920px){
-    .stop{flex-direction:row;gap:72px;}
-    .stop.reverse{flex-direction:row-reverse;}
-  }
-  .stop-figure{flex:1 1 56%;position:relative;opacity:0;transform:translateY(28px);}
-  .stop-figure img{width:100%;height:auto;border-radius:2px;box-shadow:0 24px 60px -20px rgba(20,16,10,.35);}
-  .stop-figure .frame-tag{position:absolute;bottom:14px;left:14px;background:rgba(20,16,10,.72);color:#f2efe6;font-size:11px;letter-spacing:.04em;padding:6px 12px;border-radius:2px;}
-  .stop-text{flex:1 1 40%;opacity:0;transform:translateY(28px);}
-  .stop-text .stop-num{font-family:'Fraunces',serif;font-size:13px;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;}
-  .stop-text h2{font-size:clamp(22px,3vw,30px);margin-bottom:16px;line-height:1.2;}
-  .stop-text p{font-size:16px;line-height:1.85;color:var(--text-dim);}
+  /* Each stop: a full-viewport wall — the same photo blurred and blown out
+     to the edges behind it, a real picture frame with a mat, and the
+     photo itself sitting inside at ~80% of the screen. */
+  .stop{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 20px;overflow:hidden;isolation:isolate;}
+  .stop-bg{position:absolute;inset:-6%;background-size:cover;background-position:center;filter:blur(50px) brightness(.55) saturate(1.1);transform:scale(1.12);z-index:0;}
+  .stop-scrim{position:absolute;inset:0;background:linear-gradient(180deg, rgba(12,9,6,.25), rgba(12,9,6,.6));z-index:1;}
 
-  .divider{height:1px;background:var(--line);max-width:1200px;margin:0 auto;}
+  .stop-frame{position:relative;z-index:2;width:min(80vw,980px);opacity:0;transform:translateY(28px) scale(.98);padding:14px;background:linear-gradient(155deg,#2b2116,#1c150e);box-shadow:0 40px 90px -20px rgba(0,0,0,.6),inset 0 0 0 1px rgba(255,255,255,.04);border-radius:2px;}
+  .stop-mat{background:#f5f1e6;padding:clamp(14px,2.4vw,28px);}
+  .stop-photo-wrap{max-height:70vh;display:flex;align-items:center;justify-content:center;background:#111;overflow:hidden;}
+  .stop-photo-wrap img{width:100%;height:100%;max-height:70vh;object-fit:contain;}
+  .frame-tag{margin-top:14px;text-align:center;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#7a7060;}
+
+  .stop-text{position:relative;z-index:2;max-width:600px;margin-top:36px;text-align:center;opacity:0;transform:translateY(20px);}
+  .stop-text .stop-num{font-family:'Fraunces',serif;font-size:13px;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;}
+  .stop-text h2{font-size:clamp(22px,3vw,30px);margin-bottom:14px;line-height:1.2;color:#f7f4ec;}
+  .stop-text p{font-size:16px;line-height:1.85;color:#d9d3c4;}
 
   .closing{max-width:640px;margin:0 auto;padding:110px clamp(20px,6vw,80px) 120px;text-align:center;}
   .closing blockquote{font-family:'Fraunces',serif;font-style:italic;font-size:clamp(20px,3vw,28px);line-height:1.5;color:var(--text);opacity:0;transform:translateY(20px);}
@@ -78,59 +80,77 @@
 
 <div class="walk">
 
-  <div class="stop">
-    <div class="stop-figure">
-      <img src="https://raw.githubusercontent.com/TheXuSpace/Design-Portfolio/main/Junde%20Xu%27s%20design%20portfolio%2034.jpeg" alt="Seal, Vancouver — AGORA Top 10 Finalist">
-      <div class="frame-tag">Vancouver, 2019</div>
+  <section class="stop" data-img="https://raw.githubusercontent.com/TheXuSpace/Design-Portfolio/main/Junde%20Xu%27s%20design%20portfolio%2034.jpeg">
+    <div class="stop-bg"></div>
+    <div class="stop-scrim"></div>
+    <div class="stop-frame">
+      <div class="stop-mat">
+        <div class="stop-photo-wrap">
+          <img src="https://raw.githubusercontent.com/TheXuSpace/Design-Portfolio/main/Junde%20Xu%27s%20design%20portfolio%2034.jpeg" alt="Seal, Vancouver — AGORA Top 10 Finalist">
+        </div>
+        <div class="frame-tag">Vancouver, 2019</div>
+      </div>
     </div>
     <div class="stop-text">
       <div class="stop-num">01 — Where it started</div>
       <h2>Attention is the whole craft</h2>
       <p>It started in 2019 — a harbor, an early morning, a seal surfacing for air I almost missed. I hadn't studied photography formally; I just knew I wanted to catch what most people walk past. That image ended up an AGORA Top 10 Finalist. It taught me the first lesson before I knew I was learning one: the craft isn't the camera, it's paying attention.</p>
     </div>
-  </div>
+  </section>
 
-  <div class="divider"></div>
-
-  <div class="stop reverse">
-    <div class="stop-figure">
-      <img src="https://raw.githubusercontent.com/TheXuSpace/Design-Portfolio/main/Junde%20Xu%27s%20design%20portfolio%2033.jpeg" alt="Lighthouse, Maine — AGORA Top 10 Finalist">
-      <div class="frame-tag">Maine, 2020</div>
+  <section class="stop" data-img="https://raw.githubusercontent.com/TheXuSpace/Design-Portfolio/main/Junde%20Xu%27s%20design%20portfolio%2033.jpeg">
+    <div class="stop-bg"></div>
+    <div class="stop-scrim"></div>
+    <div class="stop-frame">
+      <div class="stop-mat">
+        <div class="stop-photo-wrap">
+          <img src="https://raw.githubusercontent.com/TheXuSpace/Design-Portfolio/main/Junde%20Xu%27s%20design%20portfolio%2033.jpeg" alt="Lighthouse, Maine — AGORA Top 10 Finalist">
+        </div>
+        <div class="frame-tag">Maine, 2020</div>
+      </div>
     </div>
     <div class="stop-text">
       <div class="stop-num">02 — The opposite lesson</div>
       <h2>The strongest frame is often the emptiest</h2>
       <p>A year later, a lighthouse in Maine — pared down to almost nothing: one structure, one light, one horizon. It became my second AGORA Top 10 Finalist, and it taught me the opposite lesson from the seal. Sometimes the work isn't finding more to include, it's having the nerve to leave everything else out.</p>
     </div>
-  </div>
+  </section>
 
-  <div class="divider"></div>
-
-  <div class="stop">
-    <div class="stop-figure">
-      <img src="https://raw.githubusercontent.com/TheXuSpace/Design-Portfolio/main/Junde%20Xu%27s%20design%20portfolio%2032.jpeg" alt="Milky Way over Idaho">
-      <div class="frame-tag">Idaho, 2021</div>
+  <section class="stop" data-img="https://raw.githubusercontent.com/TheXuSpace/Design-Portfolio/main/Junde%20Xu%27s%20design%20portfolio%2032.jpeg">
+    <div class="stop-bg"></div>
+    <div class="stop-scrim"></div>
+    <div class="stop-frame">
+      <div class="stop-mat">
+        <div class="stop-photo-wrap">
+          <img src="https://raw.githubusercontent.com/TheXuSpace/Design-Portfolio/main/Junde%20Xu%27s%20design%20portfolio%2032.jpeg" alt="Milky Way over Idaho">
+        </div>
+        <div class="frame-tag">Idaho, 2021</div>
+      </div>
     </div>
     <div class="stop-text">
       <div class="stop-num">03 — What waiting teaches</div>
       <h2>Photography as a kind of patience</h2>
       <p>Idaho, 2021 — hours outside in the cold, waiting for the sky to do something. Night photography doesn't reward impatience. You set up, you wait, and mostly nothing happens until, for a few minutes, everything does. It's the closest this practice gets to meditation, and the part I didn't expect to need.</p>
     </div>
-  </div>
+  </section>
 
-  <div class="divider"></div>
-
-  <div class="stop reverse">
-    <div class="stop-figure">
-      <img src="https://raw.githubusercontent.com/TheXuSpace/Design-Portfolio/main/Junde%20Xu%27s%20design%20portfolio%2031.jpeg" alt="Aerial farmhouse, RoamWithPete cover">
-      <div class="frame-tag">RoamWithPete</div>
+  <section class="stop" data-img="https://raw.githubusercontent.com/TheXuSpace/Design-Portfolio/main/Junde%20Xu%27s%20design%20portfolio%2031.jpeg">
+    <div class="stop-bg"></div>
+    <div class="stop-scrim"></div>
+    <div class="stop-frame">
+      <div class="stop-mat">
+        <div class="stop-photo-wrap">
+          <img src="https://raw.githubusercontent.com/TheXuSpace/Design-Portfolio/main/Junde%20Xu%27s%20design%20portfolio%2031.jpeg" alt="Aerial farmhouse, RoamWithPete cover">
+        </div>
+        <div class="frame-tag">RoamWithPete</div>
+      </div>
     </div>
     <div class="stop-text">
       <div class="stop-num">04 — Where it feeds back</div>
       <h2>The same eye, pointed at a room</h2>
       <p>This became the RoamWithPete cover — an aerial view that's really about the same thing I chase in interior design: how a space reads as a whole before it reads as its details. Photography taught me to see composition first. Design is where I get to build it, on purpose, from the ground up.</p>
     </div>
-  </div>
+  </section>
 
 </div>
 
@@ -148,10 +168,17 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
   gsap.registerPlugin(ScrollTrigger);
-  document.querySelectorAll('.stop-figure, .stop-text').forEach(el => {
+
+  document.querySelectorAll('.stop').forEach(stop => {
+    const bg = stop.querySelector('.stop-bg');
+    bg.style.backgroundImage = `url('${stop.dataset.img}')`;
+  });
+
+  document.querySelectorAll('.stop-frame, .stop-text').forEach(el => {
     gsap.to(el, {
       opacity: 1,
       y: 0,
+      scale: 1,
       duration: 0.9,
       ease: 'power3.out',
       scrollTrigger: { trigger: el, start: 'top 85%' }
