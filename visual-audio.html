@@ -11,6 +11,7 @@
   html,body{height:100%;background:var(--bg);overflow:hidden;}
   body{color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;}
   a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;}
 
   header.nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:18px clamp(20px,5vw,56px);mix-blend-mode:difference;}
   .nav-logo{font-weight:700;font-size:15px;letter-spacing:.04em;}
@@ -20,7 +21,7 @@
 
   canvas{position:fixed;inset:0;z-index:1;display:block;}
 
-  #gate{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;text-align:center;background:var(--bg);transition:opacity .8s ease;padding:24px;}
+  #gate{position:fixed;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;text-align:center;background:var(--bg);transition:opacity .8s ease;padding:24px;}
   #gate .eyebrow{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);}
   #gate h1{font-size:clamp(26px,5vw,44px);font-weight:800;letter-spacing:-.02em;}
   #gate p{max-width:480px;color:var(--text-dim);font-size:14px;line-height:1.7;}
@@ -28,14 +29,46 @@
   #enterBtn:hover{background:var(--accent);border-color:var(--accent);color:#0a0a0a;}
   #gate.hidden{opacity:0;pointer-events:none;}
 
-  #hud{position:fixed;bottom:22px;left:0;right:0;z-index:10;display:flex;justify-content:center;align-items:center;gap:16px;opacity:0;transition:opacity .6s ease;}
-  #hud.show{opacity:1;}
-  #hud button{background:none;border:1px solid rgba(255,255,255,.3);color:var(--text);width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:14px;}
-  #hud button:hover{border-color:var(--accent);color:var(--accent);}
-  #hud .label{font-size:11px;color:var(--text-dim);letter-spacing:.08em;text-transform:uppercase;}
+  #bpmBadge{position:fixed;top:78px;right:clamp(20px,5vw,56px);z-index:15;text-align:right;opacity:0;transition:opacity .6s ease;}
+  #bpmBadge.show{opacity:1;}
+  #bpmBadge .num{font-size:26px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums;}
+  #bpmBadge .lbl{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);margin-top:2px;}
+
+  #trackToggle{position:fixed;top:88px;left:clamp(16px,4vw,44px);z-index:16;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(5,5,5,.5);color:var(--text);cursor:pointer;font-size:15px;opacity:0;transition:opacity .6s ease,border-color .2s ease;}
+  #trackToggle.show{opacity:1;}
+  #trackToggle:hover{border-color:var(--accent);color:var(--accent);}
+
+  #trackPanel{position:fixed;top:138px;left:clamp(16px,4vw,44px);z-index:16;width:220px;max-height:60vh;overflow-y:auto;background:rgba(10,10,10,.72);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:8px;opacity:0;transform:translateX(-8px);pointer-events:none;transition:opacity .3s ease,transform .3s ease;}
+  #trackPanel.open{opacity:1;transform:translateX(0);pointer-events:auto;}
+  #trackPanel .panel-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);padding:6px 8px 8px;}
+  .track-item{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:10px 8px;border-radius:4px;border:none;border-left:2px solid transparent;background:none;color:var(--text-dim);cursor:pointer;font-size:13px;transition:all .2s ease;}
+  .track-item:hover{background:rgba(255,255,255,.06);color:var(--text);}
+  .track-item.active{color:var(--text);border-left-color:var(--accent);background:rgba(140,8,9,.12);}
+  .track-item .dot{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.5;flex:none;}
+  .track-item.active .dot{opacity:1;color:var(--accent);}
+
+  #bar{position:fixed;bottom:0;left:0;right:0;z-index:20;display:flex;align-items:center;gap:16px;padding:14px clamp(16px,4vw,40px);background:linear-gradient(0deg, rgba(5,5,5,.92), rgba(5,5,5,0));opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .6s ease;}
+  #bar.show{opacity:1;transform:translateY(0);}
+  #playBtn{width:42px;height:42px;flex:none;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:none;color:var(--text);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:border-color .2s ease,color .2s ease;}
+  #playBtn:hover{border-color:var(--accent);color:var(--accent);}
+  #muteBtn{width:34px;height:34px;flex:none;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:none;color:var(--text);cursor:pointer;font-size:12px;transition:border-color .2s ease,color .2s ease;}
+  #muteBtn:hover{border-color:var(--accent);color:var(--accent);}
+  .time{font-size:11px;color:var(--text-dim);font-variant-numeric:tabular-nums;flex:none;width:38px;}
+  .time.right{text-align:right;}
+  #seek{flex:1;position:relative;height:20px;display:flex;align-items:center;cursor:pointer;}
+  #seek .track{position:relative;width:100%;height:3px;background:rgba(255,255,255,.18);border-radius:2px;}
+  #seek .fill{position:absolute;top:0;left:0;height:100%;width:0%;background:var(--accent);border-radius:2px;}
+  #seek .thumb{position:absolute;top:50%;left:0%;width:11px;height:11px;border-radius:50%;background:var(--text);transform:translate(-50%,-50%);box-shadow:0 0 0 3px rgba(5,5,5,.4);}
+  #nowPlaying{flex:none;max-width:220px;font-size:12px;color:var(--text-dim);letter-spacing:.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  #nowPlaying b{color:var(--text);font-weight:600;}
 
   #note{position:fixed;top:80px;left:0;right:0;z-index:10;text-align:center;font-size:11px;color:var(--text-dim);letter-spacing:.03em;padding:0 24px;opacity:0;transition:opacity 1s ease .3s;}
   #note.show{opacity:1;}
+
+  @media(max-width:640px){
+    #nowPlaying{display:none;}
+    #trackPanel{width:180px;}
+  }
 </style>
 </head>
 <body>
@@ -52,19 +85,39 @@
 
 <canvas id="viz"></canvas>
 
-<div id="note">Prototype visualizer — running a generated techno pulse live in your browser. Your real recorded set will replace this once it's added.</div>
+<div id="note">Prototype visualizer — running a generated techno pulse live in your browser. Your real recorded sets will replace this once they're added.</div>
+
+<div id="bpmBadge">
+  <div class="num" id="bpmValue">—</div>
+  <div class="lbl">BPM</div>
+</div>
+
+<button id="trackToggle" title="Choose a set">☰</button>
+<div id="trackPanel">
+  <div class="panel-label">Sets</div>
+  <div id="trackList"></div>
+</div>
 
 <div id="gate">
   <div class="eyebrow">TheXuSpace</div>
   <h1>Visual &amp; Audio</h1>
-  <p>A live audio-reactive visual system — built to run your recorded sets and let the visuals move with the music in real time, no video file required. This is a working prototype running a generated pulse; your real set drops in next.</p>
+  <p>A live audio-reactive visual system — built to run recorded sets and let the visuals move with the music in real time, no video file required. Pick a set, scrub the timeline, watch the BPM track the beat.</p>
   <button id="enterBtn">▶ Enter</button>
   <p style="font-size:11px;color:#555;">Sound on — headphones recommended</p>
 </div>
 
-<div id="hud">
+<div id="bar">
+  <button id="playBtn">▶</button>
+  <span class="time" id="curTime">0:00</span>
+  <div id="seek">
+    <div class="track">
+      <div class="fill" id="seekFill"></div>
+      <div class="thumb" id="seekThumb"></div>
+    </div>
+  </div>
+  <span class="time right" id="durTime">0:00</span>
   <button id="muteBtn" title="Mute/Unmute">🔊</button>
-  <div class="label" id="hudLabel">Prototype Pulse — 128 BPM</div>
+  <div id="nowPlaying">Now Playing — <b id="nowPlayingName">—</b></div>
 </div>
 
 <script>
@@ -75,21 +128,42 @@
   function resize(){ W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
   resize(); addEventListener('resize', resize);
 
+  // ---- Set list — add new recorded sets here as they're uploaded ----
+  const TRACKS = [
+    { file: '72626.mp3', name: '0726 RC1' }
+  ];
+
   const gate = document.getElementById('gate');
   const enterBtn = document.getElementById('enterBtn');
-  const hud = document.getElementById('hud');
+  const bar = document.getElementById('bar');
   const note = document.getElementById('note');
+  const bpmBadge = document.getElementById('bpmBadge');
+  const bpmValue = document.getElementById('bpmValue');
   const muteBtn = document.getElementById('muteBtn');
+  const playBtn = document.getElementById('playBtn');
+  const curTimeEl = document.getElementById('curTime');
+  const durTimeEl = document.getElementById('durTime');
+  const seek = document.getElementById('seek');
+  const seekFill = document.getElementById('seekFill');
+  const seekThumb = document.getElementById('seekThumb');
+  const nowPlayingName = document.getElementById('nowPlayingName');
+  const trackToggle = document.getElementById('trackToggle');
+  const trackPanel = document.getElementById('trackPanel');
+  const trackListEl = document.getElementById('trackList');
 
   let audioCtx, analyser, freqData, masterGain, muted = false;
+  let el = null;
+  let mediaSrc = null;
+  let usingRealSet = false;
+  let currentTrackIndex = -1;
+  let trimStart = 0;
+  let draggingSeek = false;
 
-  // --- Synthesized techno pulse (stand-in until a real recorded set is added) ---
-  // To use a real set instead: replace this whole block with
-  //   const el = new Audio('assets/audio/set.mp3'); el.loop = true;
-  //   const src = audioCtx.createMediaElementSource(el); src.connect(analyser); el.play();
+  // ===================== Synthesized fallback techno pulse =====================
+  let synthTimer = null;
   function startSynthLoop(){
     const bpm = 128;
-    const stepTime = 60 / bpm / 4; // 16th notes
+    const stepTime = 60 / bpm / 4;
     let step = 0;
 
     function kick(t){
@@ -144,19 +218,10 @@
       }
     }
     scheduler();
-    return setInterval(scheduler, 60);
+    synthTimer = setInterval(scheduler, 60);
   }
 
-  const REAL_SET_PATH = '72626.mp3'; // your uploaded recorded set
-  const hudLabel = document.getElementById('hudLabel');
-
-  async function hasRealSet(){
-    try{
-      const res = await fetch(REAL_SET_PATH, { method: 'HEAD', cache: 'no-store' });
-      return res.ok;
-    }catch(e){ return false; }
-  }
-
+  // ===================== Audio graph =====================
   function initAudioGraph(){
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     analyser = audioCtx.createAnalyser();
@@ -168,41 +233,202 @@
     analyser.connect(audioCtx.destination);
   }
 
-  function playRealSet(){
-    const el = new Audio(REAL_SET_PATH);
-    el.loop = true;
+  // Detect leading silence by decoding just the first chunk of the file
+  // (fast — avoids decoding an entire hour-long set into memory).
+  async function detectLeadingSilence(url){
+    try{
+      const res = await fetch(url, { headers: { Range: 'bytes=0-1500000' }, cache: 'no-store' });
+      if(!(res.ok || res.status === 206)) return 0;
+      const buf = await res.arrayBuffer();
+      const decoded = await audioCtx.decodeAudioData(buf.slice(0));
+      const data = decoded.getChannelData(0);
+      const sr = decoded.sampleRate;
+      const threshold = 0.02;
+      const win = Math.max(1, Math.floor(sr * 0.05));
+      for(let i = 0; i < data.length - win; i += win){
+        let sum = 0;
+        for(let j = i; j < i + win; j++) sum += Math.abs(data[j]);
+        if(sum / win > threshold){
+          return Math.max(0, (i / sr) - 0.05);
+        }
+      }
+      return 0;
+    }catch(e){
+      return 0;
+    }
+  }
+
+  async function hasRealSet(file){
+    try{
+      const res = await fetch(encodeURI(file), { method: 'HEAD', cache: 'no-store' });
+      return res.ok;
+    }catch(e){ return false; }
+  }
+
+  function fmtTime(s){
+    if(!isFinite(s) || s < 0) s = 0;
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60);
+    return m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  function updateSeekUI(){
+    if(!el || !usingRealSet) return;
+    const dur = Math.max(0.001, (el.duration || 0) - trimStart);
+    const cur = Math.max(0, el.currentTime - trimStart);
+    const frac = Math.min(1, Math.max(0, cur / dur));
+    seekFill.style.width = (frac * 100) + '%';
+    seekThumb.style.left = (frac * 100) + '%';
+    curTimeEl.textContent = fmtTime(cur);
+    durTimeEl.textContent = isFinite(el.duration) ? fmtTime(dur) : '0:00';
+  }
+
+  function renderTrackList(){
+    trackListEl.innerHTML = '';
+    TRACKS.forEach((t, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'track-item' + (i === currentTrackIndex ? ' active' : '');
+      btn.innerHTML = '<span class="dot"></span><span>' + t.name + '</span>';
+      btn.addEventListener('click', () => loadTrack(i, true));
+      trackListEl.appendChild(btn);
+    });
+  }
+
+  async function loadTrack(index, autoplay){
+    const t = TRACKS[index];
+    if(!t) return;
+    currentTrackIndex = index;
+    renderTrackList();
+    nowPlayingName.textContent = t.name;
+
+    if(mediaSrc){ try{ mediaSrc.disconnect(); }catch(e){} }
+    if(el){ el.pause(); el = null; }
+
+    const exists = await hasRealSet(t.file);
+    if(!exists){
+      usingRealSet = false;
+      note.classList.add('show');
+      bpmBadge.classList.remove('show');
+      if(!synthTimer) startSynthLoop();
+      playBtn.textContent = '❚❚';
+      return;
+    }
+
+    trimStart = await detectLeadingSilence(encodeURI(t.file));
+
+    el = new Audio(encodeURI(t.file));
     el.crossOrigin = 'anonymous';
-    const src = audioCtx.createMediaElementSource(el);
-    src.connect(masterGain);
-    el.play();
+    el.preload = 'auto';
+    mediaSrc = audioCtx.createMediaElementSource(el);
+    mediaSrc.connect(masterGain);
+    usingRealSet = true;
     note.classList.remove('show');
-    hudLabel.textContent = 'Now Playing — Your Set';
+    bpmBadge.classList.add('show');
+
+    el.addEventListener('loadedmetadata', () => {
+      if(trimStart > 0 && trimStart < el.duration) el.currentTime = trimStart;
+      updateSeekUI();
+    });
+    el.addEventListener('timeupdate', () => { if(!draggingSeek) updateSeekUI(); });
+    el.addEventListener('ended', () => { playBtn.textContent = '▶'; });
+
+    if(autoplay){
+      el.play();
+      playBtn.textContent = '❚❚';
+    }
   }
 
   async function initAudio(){
     initAudioGraph();
-    if(await hasRealSet()){
-      playRealSet();
-    } else {
-      startSynthLoop();
-      note.classList.add('show');
-      hudLabel.textContent = 'Prototype Pulse — 128 BPM';
-    }
+    renderTrackList();
+    await loadTrack(0, true);
   }
 
   enterBtn.addEventListener('click', async () => {
     await initAudio();
     gate.classList.add('hidden');
-    hud.classList.add('show');
+    bar.classList.add('show');
+    trackToggle.classList.add('show');
     draw();
+  });
+
+  playBtn.addEventListener('click', () => {
+    if(usingRealSet && el){
+      if(el.paused){ el.play(); playBtn.textContent = '❚❚'; }
+      else { el.pause(); playBtn.textContent = '▶'; }
+    } else {
+      muted = !muted;
+      if(masterGain) masterGain.gain.value = muted ? 0 : 0.7;
+      playBtn.textContent = muted ? '▶' : '❚❚';
+    }
   });
 
   muteBtn.addEventListener('click', () => {
     muted = !muted;
-    masterGain.gain.value = muted ? 0 : 0.7;
+    if(masterGain) masterGain.gain.value = muted ? 0 : 0.7;
     muteBtn.textContent = muted ? '🔇' : '🔊';
   });
 
+  function seekToClientX(clientX){
+    if(!el || !usingRealSet) return;
+    const rect = seek.getBoundingClientRect();
+    const frac = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+    const dur = Math.max(0.001, el.duration - trimStart);
+    el.currentTime = trimStart + frac * dur;
+    updateSeekUI();
+  }
+  seek.addEventListener('pointerdown', (e) => {
+    draggingSeek = true;
+    seekToClientX(e.clientX);
+    seek.setPointerCapture(e.pointerId);
+  });
+  seek.addEventListener('pointermove', (e) => {
+    if(draggingSeek) seekToClientX(e.clientX);
+  });
+  seek.addEventListener('pointerup', (e) => {
+    draggingSeek = false;
+    try{ seek.releasePointerCapture(e.pointerId); }catch(err){}
+  });
+
+  trackToggle.addEventListener('click', () => trackPanel.classList.toggle('open'));
+
+  // ===================== Real-time BPM detection =====================
+  // Simple onset-based beat tracker: watches the bass band for energy spikes
+  // above a rolling local average, times the gaps between spikes, and
+  // reports a smoothed BPM from the recent interval history.
+  let bassBaseline = 0;
+  let lastOnsetAt = 0;
+  let onsetIntervals = [];
+  let smoothedBpm = 0;
+
+  function updateBpm(bassEnergy, now){
+    bassBaseline = bassBaseline * 0.96 + bassEnergy * 0.04;
+    const isOnset = bassEnergy > bassBaseline * 1.35 && bassEnergy > 0.12 && (now - lastOnsetAt) > 240;
+    if(isOnset){
+      if(lastOnsetAt > 0){
+        const interval = now - lastOnsetAt;
+        if(interval > 240 && interval < 1400){
+          onsetIntervals.push(interval);
+          if(onsetIntervals.length > 10) onsetIntervals.shift();
+        }
+      }
+      lastOnsetAt = now;
+    }
+    if(onsetIntervals.length >= 3){
+      const avgMs = onsetIntervals.reduce((a,b) => a+b, 0) / onsetIntervals.length;
+      let bpm = 60000 / avgMs;
+      while(bpm < 90) bpm *= 2;
+      while(bpm > 175) bpm /= 2;
+      smoothedBpm = smoothedBpm === 0 ? bpm : smoothedBpm * 0.85 + bpm * 0.15;
+      bpmValue.textContent = Math.round(smoothedBpm);
+    }
+    if(now - lastOnsetAt > 3500){
+      bpmValue.textContent = '—';
+      onsetIntervals = [];
+    }
+  }
+
+  // ===================== Visualizer =====================
   function draw(){
     requestAnimationFrame(draw);
     if(!analyser) return;
@@ -212,12 +438,13 @@
     const mid  = avg(freqData, 8, 40) / 255;
     const treble = avg(freqData, 40, 100) / 255;
 
+    updateBpm(bass, performance.now());
+
     ctx.fillStyle = 'rgba(5,5,5,0.28)';
     ctx.fillRect(0,0,W,H);
 
     const cx = W/2, cy = H/2;
 
-    // pulsing core ring, driven by bass (the "kick")
     const baseR = Math.min(W,H) * 0.14;
     const r = baseR + bass * baseR * 1.8;
     ctx.beginPath();
@@ -226,7 +453,6 @@
     ctx.lineWidth = 2 + bass*6;
     ctx.stroke();
 
-    // rotating particle ring, driven by treble (the "hats")
     const n = 48;
     const t = performance.now() * 0.0004;
     for(let i=0;i<n;i++){
@@ -241,7 +467,6 @@
       ctx.fill();
     }
 
-    // outer frequency arc
     ctx.beginPath();
     for(let i=0;i<freqData.length;i++){
       const a2 = (i/freqData.length) * Math.PI*2;
@@ -260,7 +485,6 @@
     return s / (end-start);
   }
 
-  // idle background so canvas isn't blank behind the gate
   ctx.fillStyle = '#050505';
   ctx.fillRect(0,0,W,H);
 })();
