@@ -6,7 +6,7 @@
 <title>Visual &amp; Audio — TheXuSpace</title>
 <meta name="description" content="Visual & Audio — live audio-reactive visuals, TheXuSpace.">
 <style>
-  :root{ --bg:#050505; --text:#f2f2f2; --text-dim:#8a8a8a; --accent:#ff2e63; }
+  :root{ --bg:#050505; --text:#f2f2f2; --text-dim:#8a8a8a; --accent:#8C0809; }
   *{margin:0;padding:0;box-sizing:border-box;}
   html,body{height:100%;background:var(--bg);overflow:hidden;}
   body{color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;}
@@ -64,7 +64,7 @@
 
 <div id="hud">
   <button id="muteBtn" title="Mute/Unmute">🔊</button>
-  <div class="label">Prototype Pulse — 128 BPM</div>
+  <div class="label" id="hudLabel">Prototype Pulse — 128 BPM</div>
 </div>
 
 <script>
@@ -147,7 +147,17 @@
     return setInterval(scheduler, 60);
   }
 
-  function initAudio(){
+  const REAL_SET_PATH = 'assets/audio/set.mp3'; // drop your recorded set here (see repo README)
+  const hudLabel = document.getElementById('hudLabel');
+
+  async function hasRealSet(){
+    try{
+      const res = await fetch(REAL_SET_PATH, { method: 'HEAD', cache: 'no-store' });
+      return res.ok;
+    }catch(e){ return false; }
+  }
+
+  function initAudioGraph(){
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     analyser = audioCtx.createAnalyser();
     analyser.fftSize = 256;
@@ -156,14 +166,34 @@
     masterGain.gain.value = 0.7;
     masterGain.connect(analyser);
     analyser.connect(audioCtx.destination);
-    startSynthLoop();
   }
 
-  enterBtn.addEventListener('click', () => {
-    initAudio();
+  function playRealSet(){
+    const el = new Audio(REAL_SET_PATH);
+    el.loop = true;
+    el.crossOrigin = 'anonymous';
+    const src = audioCtx.createMediaElementSource(el);
+    src.connect(masterGain);
+    el.play();
+    note.classList.remove('show');
+    hudLabel.textContent = 'Now Playing — Your Set';
+  }
+
+  async function initAudio(){
+    initAudioGraph();
+    if(await hasRealSet()){
+      playRealSet();
+    } else {
+      startSynthLoop();
+      note.classList.add('show');
+      hudLabel.textContent = 'Prototype Pulse — 128 BPM';
+    }
+  }
+
+  enterBtn.addEventListener('click', async () => {
+    await initAudio();
     gate.classList.add('hidden');
     hud.classList.add('show');
-    note.classList.add('show');
     draw();
   });
 
@@ -192,7 +222,7 @@
     const r = baseR + bass * baseR * 1.8;
     ctx.beginPath();
     ctx.arc(cx, cy, r, 0, Math.PI*2);
-    ctx.strokeStyle = `rgba(255,46,99,${0.35 + bass*0.5})`;
+    ctx.strokeStyle = `rgba(140,8,9,${0.35 + bass*0.5})`;
     ctx.lineWidth = 2 + bass*6;
     ctx.stroke();
 
@@ -221,7 +251,7 @@
       if(i===0) ctx.moveTo(x2,y2); else ctx.lineTo(x2,y2);
     }
     ctx.closePath();
-    ctx.strokeStyle = 'rgba(255,46,99,0.25)';
+    ctx.strokeStyle = 'rgba(140,8,9,0.25)';
     ctx.lineWidth = 1;
     ctx.stroke();
   }
