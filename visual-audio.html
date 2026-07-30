@@ -13,7 +13,8 @@
   a{color:inherit;text-decoration:none;}
   button{font-family:inherit;}
 
-  header.nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:18px clamp(20px,5vw,56px);mix-blend-mode:difference;}
+  header.nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:18px clamp(20px,5vw,56px);mix-blend-mode:difference;transition:opacity .5s ease;}
+  header.nav.faded:not(:hover){opacity:.3;}
   .nav-logo{font-weight:700;font-size:15px;letter-spacing:.04em;}
   .nav-links{display:none;gap:22px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;}
   @media(min-width:800px){.nav-links{display:flex;}}
@@ -29,11 +30,6 @@
   #enterBtn:hover{background:var(--accent);border-color:var(--accent);color:#0a0a0a;}
   #gate.hidden{opacity:0;pointer-events:none;}
 
-  #bpmBadge{position:fixed;top:78px;right:clamp(20px,5vw,56px);z-index:15;text-align:right;opacity:0;transition:opacity .6s ease;}
-  #bpmBadge.show{opacity:1;}
-  #bpmBadge .num{font-size:26px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums;}
-  #bpmBadge .lbl{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);margin-top:2px;}
-
   #trackToggle{position:fixed;top:88px;left:clamp(16px,4vw,44px);z-index:16;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(5,5,5,.5);color:var(--text);cursor:pointer;font-size:15px;opacity:0;transition:opacity .6s ease,border-color .2s ease;}
   #trackToggle.show{opacity:1;}
   #trackToggle:hover{border-color:var(--accent);color:var(--accent);}
@@ -47,11 +43,12 @@
   .track-item .dot{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.5;flex:none;}
   .track-item.active .dot{opacity:1;color:var(--accent);}
 
-  #bar{position:fixed;bottom:0;left:0;right:0;z-index:20;display:flex;align-items:center;gap:16px;padding:14px clamp(16px,4vw,40px);background:linear-gradient(0deg, rgba(5,5,5,.92), rgba(5,5,5,0));opacity:0;transform:translateY(12px);transition:opacity .6s ease,transform .6s ease;}
+  #bar{position:fixed;bottom:0;left:0;right:0;z-index:20;display:flex;align-items:center;gap:16px;padding:14px clamp(16px,4vw,40px);background:linear-gradient(0deg, rgba(5,5,5,.92), rgba(5,5,5,0));opacity:0;transform:translateY(12px);transition:opacity .5s ease,transform .6s ease;}
   #bar.show{opacity:1;transform:translateY(0);}
+  #bar.show.faded:not(:hover){opacity:.3;}
   #playBtn{width:42px;height:42px;flex:none;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:none;color:var(--text);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:border-color .2s ease,color .2s ease;}
   #playBtn:hover{border-color:var(--accent);color:var(--accent);}
-  #muteBtn{width:34px;height:34px;flex:none;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:none;color:var(--text);cursor:pointer;font-size:12px;transition:border-color .2s ease,color .2s ease;}
+  #muteBtn{flex:none;height:34px;padding:0 14px;border-radius:17px;border:1px solid rgba(255,255,255,.25);background:none;color:var(--text-dim);cursor:pointer;font-size:11px;letter-spacing:.06em;text-transform:uppercase;transition:border-color .2s ease,color .2s ease;}
   #muteBtn:hover{border-color:var(--accent);color:var(--accent);}
   .time{font-size:11px;color:var(--text-dim);font-variant-numeric:tabular-nums;flex:none;width:38px;}
   .time.right{text-align:right;}
@@ -87,11 +84,6 @@
 
 <div id="note">Prototype visualizer — running a generated techno pulse live in your browser. Your real recorded sets will replace this once they're added.</div>
 
-<div id="bpmBadge">
-  <div class="num" id="bpmValue">—</div>
-  <div class="lbl">BPM</div>
-</div>
-
 <button id="trackToggle" title="Choose a set">☰</button>
 <div id="trackPanel">
   <div class="panel-label">Sets</div>
@@ -116,7 +108,7 @@
     </div>
   </div>
   <span class="time right" id="durTime">0:00</span>
-  <button id="muteBtn" title="Mute/Unmute">🔊</button>
+  <button id="muteBtn" title="Mute/Unmute">Mute</button>
   <div id="nowPlaying">Now Playing — <b id="nowPlayingName">—</b></div>
 </div>
 
@@ -133,12 +125,11 @@
     { file: '72626.mp3', name: '0726 RC1' }
   ];
 
+  const navHeader = document.querySelector('header.nav');
   const gate = document.getElementById('gate');
   const enterBtn = document.getElementById('enterBtn');
   const bar = document.getElementById('bar');
   const note = document.getElementById('note');
-  const bpmBadge = document.getElementById('bpmBadge');
-  const bpmValue = document.getElementById('bpmValue');
   const muteBtn = document.getElementById('muteBtn');
   const playBtn = document.getElementById('playBtn');
   const curTimeEl = document.getElementById('curTime');
@@ -308,9 +299,9 @@
     if(!exists){
       usingRealSet = false;
       note.classList.add('show');
-      bpmBadge.classList.remove('show');
       if(!synthTimer) startSynthLoop();
       playBtn.textContent = '❚❚';
+      refreshPlayingState();
       return;
     }
 
@@ -323,19 +314,33 @@
     mediaSrc.connect(masterGain);
     usingRealSet = true;
     note.classList.remove('show');
-    bpmBadge.classList.add('show');
 
     el.addEventListener('loadedmetadata', () => {
       if(trimStart > 0 && trimStart < el.duration) el.currentTime = trimStart;
       updateSeekUI();
     });
     el.addEventListener('timeupdate', () => { if(!draggingSeek) updateSeekUI(); });
-    el.addEventListener('ended', () => { playBtn.textContent = '▶'; });
+    el.addEventListener('play', refreshPlayingState);
+    el.addEventListener('pause', refreshPlayingState);
+    el.addEventListener('ended', () => { playBtn.textContent = '▶'; refreshPlayingState(); });
 
     if(autoplay){
       el.play();
       playBtn.textContent = '❚❚';
     }
+    refreshPlayingState();
+  }
+
+  // Fades the top nav + bottom transport bar to 30% while music is audibly
+  // playing; hovering either bar (or pausing/muting) brings it back.
+  function isAudioAudible(){
+    if(usingRealSet && el) return !el.paused && !muted;
+    return !!synthTimer && !muted;
+  }
+  function refreshPlayingState(){
+    const playing = isAudioAudible();
+    navHeader.classList.toggle('faded', playing);
+    bar.classList.toggle('faded', playing);
   }
 
   async function initAudio(){
@@ -361,12 +366,14 @@
       if(masterGain) masterGain.gain.value = muted ? 0 : 0.7;
       playBtn.textContent = muted ? '▶' : '❚❚';
     }
+    refreshPlayingState();
   });
 
   muteBtn.addEventListener('click', () => {
     muted = !muted;
     if(masterGain) masterGain.gain.value = muted ? 0 : 0.7;
-    muteBtn.textContent = muted ? '🔇' : '🔊';
+    muteBtn.textContent = muted ? 'Unmute' : 'Mute';
+    refreshPlayingState();
   });
 
   function seekToClientX(clientX){
@@ -392,42 +399,6 @@
 
   trackToggle.addEventListener('click', () => trackPanel.classList.toggle('open'));
 
-  // ===================== Real-time BPM detection =====================
-  // Simple onset-based beat tracker: watches the bass band for energy spikes
-  // above a rolling local average, times the gaps between spikes, and
-  // reports a smoothed BPM from the recent interval history.
-  let bassBaseline = 0;
-  let lastOnsetAt = 0;
-  let onsetIntervals = [];
-  let smoothedBpm = 0;
-
-  function updateBpm(bassEnergy, now){
-    bassBaseline = bassBaseline * 0.96 + bassEnergy * 0.04;
-    const isOnset = bassEnergy > bassBaseline * 1.35 && bassEnergy > 0.12 && (now - lastOnsetAt) > 240;
-    if(isOnset){
-      if(lastOnsetAt > 0){
-        const interval = now - lastOnsetAt;
-        if(interval > 240 && interval < 1400){
-          onsetIntervals.push(interval);
-          if(onsetIntervals.length > 10) onsetIntervals.shift();
-        }
-      }
-      lastOnsetAt = now;
-    }
-    if(onsetIntervals.length >= 3){
-      const avgMs = onsetIntervals.reduce((a,b) => a+b, 0) / onsetIntervals.length;
-      let bpm = 60000 / avgMs;
-      while(bpm < 90) bpm *= 2;
-      while(bpm > 175) bpm /= 2;
-      smoothedBpm = smoothedBpm === 0 ? bpm : smoothedBpm * 0.85 + bpm * 0.15;
-      bpmValue.textContent = Math.round(smoothedBpm);
-    }
-    if(now - lastOnsetAt > 3500){
-      bpmValue.textContent = '—';
-      onsetIntervals = [];
-    }
-  }
-
   // ===================== Visualizer =====================
   function draw(){
     requestAnimationFrame(draw);
@@ -437,8 +408,6 @@
     const bass = avg(freqData, 0, 8) / 255;
     const mid  = avg(freqData, 8, 40) / 255;
     const treble = avg(freqData, 40, 100) / 255;
-
-    updateBpm(bass, performance.now());
 
     ctx.fillStyle = 'rgba(5,5,5,0.28)';
     ctx.fillRect(0,0,W,H);
@@ -479,6 +448,18 @@
     ctx.strokeStyle = 'rgba(140,8,9,0.25)';
     ctx.lineWidth = 1;
     ctx.stroke();
+
+    // Center wordmark — accent red, breathing with the bass, opacity
+    // topping out at 70% so the visuals stay readable through it.
+    const wordAlpha = 0.7 * (0.55 + 0.45 * bass);
+    const wordSize = Math.min(W, H) * (0.075 + bass * 0.012);
+    ctx.save();
+    ctx.font = `800 ${wordSize}px -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = `rgba(140,8,9,${wordAlpha})`;
+    ctx.fillText('THEXUSPACE', cx, cy);
+    ctx.restore();
   }
   function avg(arr, start, end){
     let s=0; for(let i=start;i<end;i++) s += arr[i];
