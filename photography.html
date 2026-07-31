@@ -62,6 +62,11 @@
      both directions, so object-position can pan freely on either axis —
      not just whichever axis the photo's aspect ratio happens to overflow. */
   .stop-photo{position:absolute;top:50%;left:50%;width:100%;height:100%;transform:translate(-50%,-50%);object-fit:cover;object-position:50% 50%;display:block;}
+  #chapter1 .stop-photo{object-position:50% 50%;}
+  #chapter2 .stop-photo{width:132%;height:132%;object-position:50% 49%;}
+  #chapter3 .stop-photo{object-position:50% 50%;}
+  #chapter4 .stop-photo{object-position:50% 50%;}
+  #chapter5 .stop-photo{object-position:50% 50%;}
   .photo-frame .scrim{position:absolute;inset:0;background:linear-gradient(0deg, rgba(0,0,0,.72) 0%, rgba(0,0,0,.15) 45%, rgba(0,0,0,0) 65%);}
 
   .photo-frame .frame-tag{position:absolute;bottom:16px;right:18px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#e4ded1;text-shadow:0 1px 8px rgba(0,0,0,.7);}
@@ -183,7 +188,7 @@
     </a>
   </section>
 
-  <section class="stop" data-img="3.jpg">
+  <section class="stop" id="chapter3" data-img="3.jpg">
     <div class="stop-band">
       <img class="stop-bg" src="3.jpg" alt="" aria-hidden="true">
       <div class="photo-frame">
@@ -203,7 +208,7 @@
     </a>
   </section>
 
-  <section class="stop" data-img="4.jpg">
+  <section class="stop" id="chapter4" data-img="4.jpg">
     <div class="stop-band">
       <img class="stop-bg" src="4.jpg" alt="" aria-hidden="true">
       <div class="photo-frame">
@@ -225,7 +230,7 @@
 
 </div>
 
-<section class="stop" data-img="5.jpg">
+<section class="stop" id="chapter5" data-img="5.jpg">
   <div class="stop-band">
     <img class="stop-bg" src="5.jpg" alt="" aria-hidden="true">
     <div class="photo-frame">
