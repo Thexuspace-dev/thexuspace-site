@@ -37,14 +37,14 @@
   .page-head p{color:var(--yellow-dim);font-size:16px;line-height:1.8;max-width:520px;}
   .scroll-cue{margin-top:40px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--yellow-dim);opacity:.7;}
 
-  /* Each chapter: a full-bleed blurred copy of the photo fills the frame,
-     the sharp photo sits at 85% scale on top, its edge feathering into the
-     blur beneath it so picture and frame blend with no hard seam — and
-     since the frame is just the photo itself, it always matches. */
+  /* Each chapter: a true depth-of-field effect. The same photo sits behind
+     itself — zoomed in much larger and heavily blurred, like an out-of-focus
+     background — while the actual photo stays perfectly sharp at 85% of the
+     frame, no fade or mask on the photo itself. */
   .stop{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background-color:#1c150e;border:none;transition:background-color .6s ease;scroll-snap-align:start;scroll-snap-stop:always;}
   .stop-band{position:absolute;inset:0;overflow:hidden;}
-  .stop-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(60px) brightness(.55) saturate(1.1);transform:scale(1.18);}
-  .stop-photo{position:absolute;top:50%;left:50%;width:66%;height:66%;transform:translate(-50%,-50%);object-fit:cover;-webkit-mask-image:radial-gradient(closest-side, black 58%, transparent 100%);mask-image:radial-gradient(closest-side, black 58%, transparent 100%);}
+  .stop-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(45px) brightness(.5) saturate(1.15);transform:scale(1.6);}
+  .stop-photo{position:absolute;top:50%;left:50%;width:85%;height:85%;transform:translate(-50%,-50%);object-fit:cover;box-shadow:0 30px 80px rgba(0,0,0,.5);}
   .stop-band .scrim{position:absolute;inset:0;background:linear-gradient(0deg, rgba(0,0,0,.72) 0%, rgba(0,0,0,.15) 45%, rgba(0,0,0,0) 65%);}
 
   .stop-overlay{position:absolute;z-index:2;left:0;right:0;bottom:0;width:100%;padding:0 clamp(24px,7vw,90px) clamp(28px,5vw,52px);opacity:0;transform:translateY(20px);}
@@ -123,7 +123,7 @@
     </a>
   </section>
 
-  <section class="stop" data-img="2.jpg">
+  <section class="stop" id="chapter2" data-img="2.jpg">
     <div class="stop-band">
       <img class="stop-bg" src="2.jpg" alt="" aria-hidden="true">
       <img class="stop-photo" src="2.jpg" alt="Ground squirrel portrait">
