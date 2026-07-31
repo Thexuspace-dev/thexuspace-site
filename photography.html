@@ -40,22 +40,26 @@
   .stop-bg{position:absolute;inset:-6%;background-size:cover;background-position:center;filter:blur(50px) brightness(.55) saturate(1.1);transform:scale(1.12);z-index:0;}
   .stop-scrim{position:absolute;inset:0;background:linear-gradient(180deg, rgba(12,9,6,.25), rgba(12,9,6,.6));z-index:1;}
 
-  .stop-frame{position:relative;z-index:2;width:min(80vw,980px);opacity:0;transform:translateY(28px) scale(.98);padding:14px;background:linear-gradient(155deg,#2b2116,#1c150e);box-shadow:0 40px 90px -20px rgba(0,0,0,.6),inset 0 0 0 1px rgba(255,255,255,.04);border-radius:2px;}
-  .stop-mat{background:#f5f1e6;padding:clamp(14px,2.4vw,28px);}
-  .stop-photo-wrap{max-height:70vh;display:flex;align-items:center;justify-content:center;background:#111;overflow:hidden;}
-  .stop-photo-wrap img{width:100%;height:100%;max-height:70vh;object-fit:contain;}
+  .stop-frame{position:relative;z-index:2;width:min(85vw,1500px);opacity:0;transform:translateY(28px) scale(.98);padding:10px;background:linear-gradient(155deg,#2b2116,#1c150e);box-shadow:0 40px 90px -20px rgba(0,0,0,.6),inset 0 0 0 1px rgba(255,255,255,.04);border-radius:2px;}
+  .stop-mat{background:#f5f1e6;padding:clamp(10px,1.6vw,20px);}
+  .stop-photo-wrap{max-height:80vh;display:flex;align-items:center;justify-content:center;background:#111;overflow:hidden;}
+  .stop-photo-wrap img{width:100%;height:100%;max-height:80vh;object-fit:contain;}
   .frame-tag{margin-top:14px;text-align:center;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#7a7060;}
 
-  .stop-text{position:relative;z-index:2;max-width:600px;margin-top:36px;text-align:center;opacity:0;transform:translateY(20px);}
-  .stop-text .stop-num{font-family:'Fraunces',serif;font-size:13px;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;}
-  .stop-text .stop-num .chapter-word{color:#f7f4ec;font-style:italic;}
+  .stop-text{position:relative;z-index:2;max-width:600px;margin-top:48px;text-align:center;opacity:0;transform:translateY(20px);}
+  .chapter-mark{display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:24px;}
+  .chapter-mark .chapter-index{font-family:'Fraunces',serif;font-size:15px;color:var(--accent);letter-spacing:.14em;}
+  .chapter-mark .chapter-rule{width:30px;height:1px;background:var(--accent);opacity:.55;}
+  .chapter-mark .chapter-word{font-family:'Fraunces',serif;font-style:italic;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#f7f4ec;}
   .stop-text h2{font-size:clamp(22px,3vw,30px);margin-bottom:14px;line-height:1.2;color:#f7f4ec;}
   .stop-text p{font-size:16px;line-height:1.85;color:#d9d3c4;}
 
   /* Chapter Five — no photo yet, the story still being written */
   .closing{max-width:640px;margin:0 auto;padding:130px clamp(20px,6vw,80px) 130px;text-align:center;}
-  .closing .stop-num{font-family:'Fraunces',serif;font-size:13px;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;opacity:0;transform:translateY(16px);}
-  .closing .stop-num .chapter-word{color:var(--text);font-style:italic;}
+  .closing .chapter-mark{display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:28px;opacity:0;transform:translateY(16px);}
+  .closing .chapter-mark .chapter-index{font-family:'Fraunces',serif;font-size:15px;color:var(--accent);letter-spacing:.14em;}
+  .closing .chapter-mark .chapter-rule{width:30px;height:1px;background:var(--accent);opacity:.55;}
+  .closing .chapter-mark .chapter-word{font-family:'Fraunces',serif;font-style:italic;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--text);}
   .closing h2{font-size:clamp(24px,3.4vw,34px);margin-bottom:20px;line-height:1.25;opacity:0;transform:translateY(20px);}
   .closing .closing-body{color:var(--text-dim);font-size:16px;line-height:1.85;margin-bottom:44px;opacity:0;transform:translateY(20px);}
   .closing blockquote{font-family:'Fraunces',serif;font-style:italic;font-size:clamp(20px,3vw,28px);line-height:1.5;color:var(--text);opacity:0;transform:translateY(20px);}
@@ -98,7 +102,7 @@
       </div>
     </div>
     <div class="stop-text">
-      <div class="stop-num">Chapter One — <span class="chapter-word">Wander</span></div>
+      <div class="chapter-mark"><span class="chapter-index">01</span><span class="chapter-rule"></span><span class="chapter-word">Wander</span></div>
       <h2>Before it was a practice, it was just a family trip</h2>
       <p>It started with international travel — cameras out on family trips, memories for us, nothing more serious than that. In 2019, near Vancouver, I photographed a seal without thinking much of it, then submitted the shot on a whim. It placed as an AGORA Top 10 Finalist. I hadn't set out to become anything. I'd just liked the picture.</p>
     </div>
@@ -116,7 +120,7 @@
       </div>
     </div>
     <div class="stop-text">
-      <div class="stop-num">Chapter Two — <span class="chapter-word">Stillness</span></div>
+      <div class="chapter-mark"><span class="chapter-index">02</span><span class="chapter-rule"></span><span class="chapter-word">Stillness</span></div>
       <h2>2020, and the old photos kept me sane</h2>
       <p>Then 2020 happened — the kind of year still strange to describe out loud. Isolation set in, and somehow it was the photos from before, from the freedom of past trips, that got me through it. Going back through them, then shooting again whenever I could, pulled me further into photography than any deliberate plan would have. The lighthouse in Maine came out of that year — my second AGORA Top 10 Finalist.</p>
     </div>
@@ -134,7 +138,7 @@
       </div>
     </div>
     <div class="stop-text">
-      <div class="stop-num">Chapter Three — <span class="chapter-word">Wonder</span></div>
+      <div class="chapter-mark"><span class="chapter-index">03</span><span class="chapter-rule"></span><span class="chapter-word">Wonder</span></div>
       <h2>Not just looking at stars — bathing in them</h2>
       <p>Then one night in Idaho. Not just looking up at stars, but standing under a sky so full it felt like bathing in a falling universe. I don't have a tidier way to describe it than that. Some photographs exist because you're documenting something. This one exists because I didn't want to forget what that felt like.</p>
     </div>
@@ -152,7 +156,7 @@
       </div>
     </div>
     <div class="stop-text">
-      <div class="stop-num">Chapter Four — <span class="chapter-word">Structure</span></div>
+      <div class="chapter-mark"><span class="chapter-index">04</span><span class="chapter-rule"></span><span class="chapter-word">Structure</span></div>
       <h2>Life happens, and the eye changes with it</h2>
       <p>Between 2022 and 2025, the way I looked changed. I got more observant — drawn into existing and conceptual architecture, into how spaces are actually built and imagined. My composition shifted with it, more horizontal, closer to 16:9 film framing, and I started posting the work differently to match. This is where photography stopped being separate from the design work and started being the same eye.</p>
     </div>
@@ -161,7 +165,7 @@
 </div>
 
 <div class="closing">
-  <div class="stop-num">Chapter Five — <span class="chapter-word">Continuing</span></div>
+  <div class="chapter-mark"><span class="chapter-index">05</span><span class="chapter-rule"></span><span class="chapter-word">Continuing</span></div>
   <h2>Today, still learning what my perspective is</h2>
   <p class="closing-body">And today — July 30, 2026 — this is still where I am: still looking, still figuring out what my own perspective is. There's no photo for this chapter yet, because it isn't finished. That's the point. This isn't a closed story, it's the one I'm still telling.</p>
   <blockquote>
@@ -193,7 +197,7 @@
       scrollTrigger: { trigger: el, start: 'top 85%' }
     });
   });
-  document.querySelectorAll('.closing .stop-num, .closing h2, .closing .closing-body, .closing blockquote').forEach((el, i) => {
+  document.querySelectorAll('.closing .chapter-mark, .closing h2, .closing .closing-body, .closing blockquote').forEach((el, i) => {
     gsap.to(el, {
       opacity: 1,
       y: 0,
