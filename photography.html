@@ -78,11 +78,14 @@
   .collection-btn .collection-label{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#e4ded1;text-align:center;max-width:60px;line-height:1.4;}
   @media(max-width:700px){.collection-btn{display:none;}}
 
-  /* Closing — a 1:1 square-tile mosaic of the archive behind the quote,
-     dimmed with a scrim so the text and buttons stay readable. */
+  /* Closing — a stack of thin horizontal strip placeholders behind the
+     quote (stand-ins for a future 20-photo panoramic filmstrip), dimmed
+     with a scrim so the text and buttons stay readable. Footer shares the
+     exact same dark background so the whole bottom of the page reads as
+     one continuous color, no seam. */
   .closing{position:relative;padding:120px clamp(20px,6vw,80px) 100px;text-align:center;overflow:hidden;background:#141019;scroll-snap-align:start;}
-  .closing-mosaic{position:absolute;inset:0;display:grid;grid-template-columns:repeat(10,1fr);z-index:0;}
-  .closing-mosaic div{aspect-ratio:1/1;background-size:cover;background-position:center;filter:grayscale(.25) brightness(.55);}
+  .closing-mosaic{position:absolute;inset:0;display:flex;flex-direction:column;z-index:0;}
+  .closing-mosaic div{flex:1 1 auto;width:100%;background-size:cover;background-position:center;filter:grayscale(.25) brightness(.5);}
   .closing-scrim{position:absolute;inset:0;background:linear-gradient(180deg, rgba(12,9,15,.55) 0%, rgba(12,9,15,.88) 100%);z-index:1;}
   .closing-inner{position:relative;z-index:2;max-width:640px;margin:0 auto;}
   .closing blockquote{font-family:'Fraunces',serif;font-style:italic;font-size:clamp(20px,3vw,28px);line-height:1.5;color:#f7f4ec;opacity:0;transform:translateY(20px);}
@@ -95,8 +98,8 @@
   .social-btn:hover{border-color:var(--accent);color:var(--accent);}
   .social-btn svg{width:15px;height:15px;flex:none;}
 
-  footer{padding:40px clamp(20px,6vw,80px);border-top:1px solid var(--line);background:var(--bg-deep);font-size:12px;color:var(--text-dim);text-align:center;scroll-snap-align:start;}
-  footer .welcome{font-family:'Fraunces',serif;font-style:italic;font-size:15px;color:var(--text);}
+  footer{padding:40px clamp(20px,6vw,80px);border-top:1px solid rgba(247,244,236,.1);background:#141019;font-size:12px;color:#c9c2b4;text-align:center;scroll-snap-align:start;}
+  footer .welcome{font-family:'Fraunces',serif;font-style:italic;font-size:15px;color:#f7f4ec;opacity:.8;}
 </style>
 </head>
 <body>
