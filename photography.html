@@ -12,7 +12,8 @@
   :root{
     --bg:#e7e2d5; --bg-deep:#ddd7c8; --card:#f2efe6; --line:rgba(30,26,20,0.14);
     --text:#221e18; --text-dim:#655c4d; --accent:#a97d4f; --ease:cubic-bezier(0.65,0,0.35,1);
-    --nav-fg:var(--text); --nav-fg-dim:var(--text-dim);
+    --olive:#333b22; --yellow:#f4e6a3; --yellow-dim:rgba(244,230,163,.72);
+    --nav-fg:var(--yellow); --nav-fg-dim:var(--yellow-dim);
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   body{background:var(--bg);color:var(--text);font-family:'Inter',Arial,sans-serif;-webkit-font-smoothing:antialiased;}
@@ -20,7 +21,7 @@
   a{color:inherit;text-decoration:none;}
   img{display:block;max-width:100%;}
 
-  header.nav{position:sticky;top:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:18px clamp(20px,5vw,56px);background:rgba(231,226,213,.9);backdrop-filter:blur(6px);transition:background-color .5s ease,opacity .4s ease;}
+  header.nav{position:sticky;top:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:18px clamp(20px,5vw,56px);background:rgba(51,59,34,.92);backdrop-filter:blur(6px);transition:background-color .5s ease,opacity .4s ease;}
   header.nav.scrolled:not(:hover){opacity:.3;}
   .nav-logo{font-family:'Fraunces',serif;font-weight:600;font-size:17px;color:var(--nav-fg);transition:color .5s ease;}
   .nav-links{display:flex;gap:24px;align-items:center;}
@@ -29,26 +30,29 @@
   .nav-links a:hover,.nav-links a.current{color:var(--accent);}
   .btn{display:inline-flex;padding:10px 20px;border-radius:2px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
 
-  .page-head{padding:90px clamp(20px,6vw,80px) 60px;max-width:760px;}
-  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:14px;}
-  h1{font-size:clamp(34px,6vw,58px);margin-bottom:18px;}
-  .page-head p{color:var(--text-dim);font-size:16px;line-height:1.8;max-width:520px;}
-  .scroll-cue{margin-top:40px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-dim);opacity:.6;}
+  .page-head{padding:90px clamp(20px,6vw,80px) 60px;max-width:760px;background:var(--olive);}
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--yellow);font-weight:600;margin-bottom:14px;opacity:.85;}
+  h1{font-size:clamp(34px,6vw,58px);margin-bottom:18px;color:var(--yellow);}
+  .page-head p{color:var(--yellow-dim);font-size:16px;line-height:1.8;max-width:520px;}
+  .scroll-cue{margin-top:40px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--yellow-dim);opacity:.7;}
 
-  /* Each chapter: one cinematic 16:9 band, letterboxed in the photo's own
-     dominant color (no blur, no second copy of the image), text overlaid
-     directly on the photo so it reads while you're looking at it. */
-  .stop{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background-color:#1c150e;transition:background-color .6s ease;}
-  .stop-band{position:absolute;left:0;top:50%;width:100%;aspect-ratio:16/9;transform:translateY(-50%);overflow:hidden;}
-  .stop-band img{width:100%;height:100%;object-fit:cover;display:block;}
+  /* Each chapter: a full-bleed blurred copy of the photo fills the frame,
+     the sharp photo sits at 85% scale on top, its edge feathering into the
+     blur beneath it so picture and frame blend with no hard seam — and
+     since the frame is just the photo itself, it always matches. */
+  .stop{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background-color:#1c150e;border:none;transition:background-color .6s ease;}
+  .stop-band{position:absolute;inset:0;overflow:hidden;}
+  .stop-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(60px) brightness(.55) saturate(1.1);transform:scale(1.18);}
+  .stop-photo{position:absolute;top:50%;left:50%;width:85%;height:85%;transform:translate(-50%,-50%);object-fit:cover;-webkit-mask-image:radial-gradient(closest-side, black 76%, transparent 100%);mask-image:radial-gradient(closest-side, black 76%, transparent 100%);}
   .stop-band .scrim{position:absolute;inset:0;background:linear-gradient(0deg, rgba(0,0,0,.72) 0%, rgba(0,0,0,.15) 45%, rgba(0,0,0,0) 65%);}
 
   .stop-overlay{position:absolute;z-index:2;left:0;right:0;bottom:0;width:100%;padding:0 clamp(24px,7vw,90px) clamp(28px,5vw,52px);opacity:0;transform:translateY(20px);}
   .chapter-mark{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
-  .chapter-mark .chapter-index{font-family:'Fraunces',serif;font-size:15px;color:var(--accent);letter-spacing:.14em;}
-  .chapter-mark .chapter-rule{width:26px;height:1px;background:var(--accent);opacity:.6;}
+  .chapter-mark .chapter-index{font-family:'Fraunces',serif;font-size:15px;color:var(--stop-accent, var(--accent));letter-spacing:.14em;}
+  .chapter-mark .chapter-rule{width:26px;height:1px;background:var(--stop-accent, var(--accent));opacity:.7;}
   .chapter-mark .chapter-word{font-family:'Fraunces',serif;font-style:italic;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#f7f4ec;}
   .stop-overlay h2{font-size:clamp(20px,2.8vw,28px);margin-bottom:10px;line-height:1.2;color:#f7f4ec;max-width:620px;}
+  #chapter1 .stop-overlay h2{font-size:clamp(36px,6vw,64px);opacity:.5;max-width:760px;}
   .stop-overlay p{font-size:15px;line-height:1.75;color:#d9d3c4;max-width:560px;}
   .stop-overlay .frame-tag{margin-top:12px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#b9b0a0;}
 
@@ -100,14 +104,15 @@
 
 <div class="walk">
 
-  <section class="stop" data-img="1.jpg">
+  <section class="stop" id="chapter1" data-img="1.jpg">
     <div class="stop-band">
-      <img src="1.jpg" alt="Harbor seal on seaweed-covered rocks, Vancouver">
+      <img class="stop-bg" src="1.jpg" alt="" aria-hidden="true">
+      <img class="stop-photo" src="1.jpg" alt="Harbor seal on seaweed-covered rocks, Vancouver">
       <div class="scrim"></div>
       <div class="stop-overlay">
         <div class="chapter-mark"><span class="chapter-index">01</span><span class="chapter-rule"></span><span class="chapter-word">Wander</span></div>
-        <h2>Before it was a practice, it was just a family trip</h2>
-        <p>It started with international travel — cameras out on family trips, memories for us, nothing more serious than that. In 2019, near Vancouver, I photographed a seal without thinking much of it, then submitted the shot on a whim. It placed as an AGORA Top 10 Finalist. I hadn't set out to become anything. I'd just liked the picture.</p>
+        <h2>Beginner's luck</h2>
+        <p>It was just another day on the trip — the seal was lying there until a curious tourist nearby startled it awake. I got the shot without thinking much of it, then submitted it on a whim. It placed as an AGORA Top 10 Finalist. I still can't explain why — I just liked the picture.</p>
         <div class="frame-tag">Vancouver, 2019</div>
       </div>
     </div>
@@ -119,7 +124,8 @@
 
   <section class="stop" data-img="2.jpg">
     <div class="stop-band">
-      <img src="2.jpg" alt="Ground squirrel portrait">
+      <img class="stop-bg" src="2.jpg" alt="" aria-hidden="true">
+      <img class="stop-photo" src="2.jpg" alt="Ground squirrel portrait">
       <div class="scrim"></div>
       <div class="stop-overlay">
         <div class="chapter-mark"><span class="chapter-index">02</span><span class="chapter-rule"></span><span class="chapter-word">Stillness</span></div>
@@ -136,7 +142,8 @@
 
   <section class="stop" data-img="3.jpg">
     <div class="stop-band">
-      <img src="3.jpg" alt="Standing under the Milky Way, Idaho">
+      <img class="stop-bg" src="3.jpg" alt="" aria-hidden="true">
+      <img class="stop-photo" src="3.jpg" alt="Standing under the Milky Way, Idaho">
       <div class="scrim"></div>
       <div class="stop-overlay">
         <div class="chapter-mark"><span class="chapter-index">03</span><span class="chapter-rule"></span><span class="chapter-word">Wonder</span></div>
@@ -153,7 +160,8 @@
 
   <section class="stop" data-img="4.jpg">
     <div class="stop-band">
-      <img src="4.jpg" alt="Rooftop at dusk, RoamWithPete">
+      <img class="stop-bg" src="4.jpg" alt="" aria-hidden="true">
+      <img class="stop-photo" src="4.jpg" alt="Rooftop at dusk, RoamWithPete">
       <div class="scrim"></div>
       <div class="stop-overlay">
         <div class="chapter-mark"><span class="chapter-index">04</span><span class="chapter-rule"></span><span class="chapter-word">Structure</span></div>
@@ -172,7 +180,8 @@
 
 <section class="stop" data-img="5.jpg">
   <div class="stop-band">
-    <img src="5.jpg" alt="Horse portrait, black and white">
+    <img class="stop-bg" src="5.jpg" alt="" aria-hidden="true">
+    <img class="stop-photo" src="5.jpg" alt="Horse portrait, black and white">
     <div class="scrim"></div>
     <div class="stop-overlay">
       <div class="chapter-mark"><span class="chapter-index">05</span><span class="chapter-rule"></span><span class="chapter-word">Continuing</span></div>
@@ -246,6 +255,7 @@
       stop.dataset.color = c.rgb;
       stop.dataset.light = c.light ? '1' : '0';
       stop.style.backgroundColor = c.rgb;
+      stop.style.setProperty('--stop-accent', c.rgb);
     };
     if(img.complete) apply();
     else img.addEventListener('load', apply);
