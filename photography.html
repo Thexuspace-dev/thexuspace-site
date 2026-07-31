@@ -76,13 +76,13 @@
   .stop-overlay{position:absolute;z-index:2;left:0;right:0;bottom:0;width:100%;padding:0 clamp(18px,5vw,44px) clamp(20px,4vw,36px);opacity:0;transform:translateY(20px);}
   /* Number + rule only — the one-word label ("Wander"/"Static"/etc.) has
      been removed. The h2 subtitle is the real heading again. */
-  .chapter-mark{display:flex;align-items:baseline;gap:16px;margin-bottom:10px;}
+  .chapter-mark{display:flex;align-items:baseline;gap:16px;margin-bottom:12px;flex-wrap:wrap;}
   .chapter-mark .chapter-index{font-family:'Fraunces',serif;font-size:16px;color:var(--stop-accent, var(--accent));letter-spacing:.14em;}
   .chapter-mark .chapter-rule{width:30px;height:1px;background:var(--stop-accent, var(--accent));opacity:.7;align-self:center;}
   #chapter1 .chapter-mark .chapter-index{color:#f7f4ec;}
   #chapter1 .chapter-mark .chapter-rule{background:#f7f4ec;}
-  .stop-overlay h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(22px,3vw,30px);color:#f7f4ec;margin-bottom:12px;}
-  #chapter1 .stop-overlay h2{font-size:clamp(36px,6vw,64px);opacity:.5;max-width:760px;}
+  .chapter-mark h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(22px,3vw,30px);color:#f7f4ec;margin:0;}
+  #chapter1 .chapter-mark h2{font-size:clamp(30px,5vw,52px);opacity:.5;max-width:760px;}
   .stop-overlay p{font-size:15px;line-height:1.7;color:#d9d3c4;max-width:min(860px,72vw);margin-top:16px;}
 
   .collection-btn{position:absolute;top:50%;right:clamp(14px,3.5vw,44px);transform:translateY(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:8px;color:#f7f4ec;opacity:.9;}
@@ -148,8 +148,7 @@
         <div class="grid-overlay"></div>
         <div class="frame-tag">Vancouver, 2019</div>
         <div class="stop-overlay">
-          <div class="chapter-mark"><span class="chapter-index">01</span><span class="chapter-rule"></span></div>
-          <h2>Beginner's luck</h2>
+          <div class="chapter-mark"><span class="chapter-index">01</span><span class="chapter-rule"></span><h2>Beginner's luck</h2></div>
           <p>It was just another day on my trip — the seal was lying there and got awakened by a nearby curious tourist. I was just able to grab a shot of him without thinking much of it, and it went on to place in the AGORA Top 10. In the end, I can't explain why — I just liked the picture.</p>
         </div>
       </div>
@@ -169,8 +168,7 @@
         <div class="grid-overlay"></div>
         <div class="frame-tag">Colorado, 2020</div>
         <div class="stop-overlay">
-          <div class="chapter-mark"><span class="chapter-index">02</span><span class="chapter-rule"></span></div>
-          <h2>2020, and the old photos kept me sane</h2>
+          <div class="chapter-mark"><span class="chapter-index">02</span><span class="chapter-rule"></span><h2>2020, and the old photos kept me sane</h2></div>
           <p>Then 2020 happened — the kind of year still strange to explain out loud. Isolation set in, and it was the old photos from past trips that got me through it, going back through them again and again. Somewhere in that routine, I started to notice the tiny details — including this curious fellow here — and it turned a quiet, difficult year into the start of a habit I never really dropped.</p>
         </div>
       </div>
@@ -190,8 +188,7 @@
         <div class="grid-overlay"></div>
         <div class="frame-tag">Idaho, 2021</div>
         <div class="stop-overlay">
-          <div class="chapter-mark"><span class="chapter-index">03</span><span class="chapter-rule"></span></div>
-          <h2>My obsession with cold, dark nights in the middle of nowhere</h2>
+          <div class="chapter-mark"><span class="chapter-index">03</span><span class="chapter-rule"></span><h2>My obsession with cold, dark nights in the middle of nowhere</h2></div>
           <p>I'd tried to capture that mysterious dark sky before, but could never catch the one opportunity to take it all in — until this night in Idaho, far from anywhere, under a sky that felt endless. This shot exists because I didn't want to forget what that felt like, bathing in a universe that seemed to be falling all around me.</p>
         </div>
       </div>
@@ -211,8 +208,7 @@
         <div class="grid-overlay"></div>
         <div class="frame-tag">2022 – 2025, RoamWithPete</div>
         <div class="stop-overlay">
-          <div class="chapter-mark"><span class="chapter-index">04</span><span class="chapter-rule"></span></div>
-          <h2>Life happens, and the eye changes with it</h2>
+          <div class="chapter-mark"><span class="chapter-index">04</span><span class="chapter-rule"></span><h2>Life happens, and the eye changes with it</h2></div>
           <p>Between 2022 and 2025, the way I looked at things changed. I got more observant — drawn into existing and conceptual architecture, the logic behind a facade or a stairwell. My composition shifted with it too, more horizontal, closer to 16:9 film framing, and I started posting the work differently to match — a shift I'm still refining today.</p>
         </div>
       </div>
@@ -233,8 +229,7 @@
       <div class="scrim"></div>
       <div class="frame-tag">2026</div>
       <div class="stop-overlay">
-        <div class="chapter-mark"><span class="chapter-index">05</span><span class="chapter-rule"></span></div>
-        <h2>Today, still learning what my perspective is</h2>
+        <div class="chapter-mark"><span class="chapter-index">05</span><span class="chapter-rule"></span><h2>Today, still learning what my perspective is</h2></div>
         <p>And today — July 30, 2026 — this is still where I am: still looking, still figuring out what my own perspective actually is. Not a neat ending, just where the story happens to be standing right now. This isn't a closed chapter. It's the one I'm still writing, one frame and one question at a time.</p>
       </div>
     </div>
