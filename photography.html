@@ -62,6 +62,17 @@
 
   .photo-frame .frame-tag{position:absolute;bottom:16px;right:18px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#e4ded1;text-shadow:0 1px 8px rgba(0,0,0,.7);}
 
+  /* Rule-of-thirds composition grid — 2 vertical + 2 horizontal red lines,
+     evenly dividing the frame into 3x3. Toggle with the "Grid" nav button. */
+  .grid-overlay{position:absolute;inset:0;z-index:20;pointer-events:none;display:none;
+    background-image:
+      repeating-linear-gradient(to right, transparent 0, transparent calc(33.333% - 1px), rgba(255,20,20,.9) calc(33.333% - 1px), rgba(255,20,20,.9) 33.333%),
+      repeating-linear-gradient(to bottom, transparent 0, transparent calc(33.333% - 1px), rgba(255,20,20,.9) calc(33.333% - 1px), rgba(255,20,20,.9) 33.333%);
+  }
+  body.show-grid .grid-overlay{display:block;}
+  .grid-toggle{font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border:1px solid rgba(255,20,20,.6);color:#ff8080;border-radius:2px;background:rgba(0,0,0,.2);cursor:pointer;}
+  .grid-toggle:hover{background:rgba(255,20,20,.15);}
+
   .stop-overlay{position:absolute;z-index:2;left:0;right:0;bottom:0;width:100%;padding:0 clamp(18px,5vw,44px) clamp(20px,4vw,36px);opacity:0;transform:translateY(20px);}
   /* Number + rule only — the one-word label ("Wander"/"Static"/etc.) has
      been removed. The h2 subtitle is the real heading again. */
@@ -113,6 +124,7 @@
     <a href="photography.html" class="current">Photography</a>
     <a href="visual-audio.html">Visual &amp; Audio</a>
     <a class="btn" href="about.html">About</a>
+    <button type="button" class="grid-toggle" id="gridToggle">Grid</button>
   </div>
 </header>
 
@@ -133,6 +145,7 @@
       <div class="photo-frame">
         <img class="stop-photo" src="1.jpg" alt="Harbor seal on seaweed-covered rocks, Vancouver">
         <div class="scrim"></div>
+        <div class="grid-overlay"></div>
         <div class="frame-tag">Vancouver, 2019</div>
         <div class="stop-overlay">
           <div class="chapter-mark"><span class="chapter-index">01</span><span class="chapter-rule"></span></div>
@@ -153,6 +166,7 @@
       <div class="photo-frame">
         <img class="stop-photo" src="2.jpg" alt="Ground squirrel portrait">
         <div class="scrim"></div>
+        <div class="grid-overlay"></div>
         <div class="frame-tag">Colorado, 2020</div>
         <div class="stop-overlay">
           <div class="chapter-mark"><span class="chapter-index">02</span><span class="chapter-rule"></span></div>
@@ -173,6 +187,7 @@
       <div class="photo-frame">
         <img class="stop-photo" src="3.jpg" alt="Standing under the Milky Way, Idaho">
         <div class="scrim"></div>
+        <div class="grid-overlay"></div>
         <div class="frame-tag">Idaho, 2021</div>
         <div class="stop-overlay">
           <div class="chapter-mark"><span class="chapter-index">03</span><span class="chapter-rule"></span></div>
@@ -193,6 +208,7 @@
       <div class="photo-frame">
         <img class="stop-photo" src="4.jpg" alt="Rooftop at dusk, RoamWithPete">
         <div class="scrim"></div>
+        <div class="grid-overlay"></div>
         <div class="frame-tag">2022 – 2025, RoamWithPete</div>
         <div class="stop-overlay">
           <div class="chapter-mark"><span class="chapter-index">04</span><span class="chapter-rule"></span></div>
@@ -255,6 +271,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
   gsap.registerPlugin(ScrollTrigger);
+
+  // ---- Rule-of-thirds composition grid toggle ----
+  const gridToggle = document.getElementById('gridToggle');
+  if(gridToggle){
+    gridToggle.addEventListener('click', () => {
+      document.body.classList.toggle('show-grid');
+    });
+  }
 
   const stops = Array.from(document.querySelectorAll('.stop'));
 
