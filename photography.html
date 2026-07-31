@@ -16,6 +16,7 @@
     --nav-fg:var(--yellow); --nav-fg-dim:var(--yellow-dim);
   }
   *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-snap-type:y mandatory;}
   body{background:var(--bg);color:var(--text);font-family:'Inter',Arial,sans-serif;-webkit-font-smoothing:antialiased;}
   h1,h2,h3{font-family:'Fraunces',serif;letter-spacing:-.01em;}
   a{color:inherit;text-decoration:none;}
@@ -30,7 +31,7 @@
   .nav-links a:hover,.nav-links a.current{color:var(--accent);}
   .btn{display:inline-flex;padding:10px 20px;border-radius:2px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
 
-  .page-head{padding:90px clamp(20px,6vw,80px) 60px;max-width:760px;background:var(--olive);}
+  .page-head{padding:90px clamp(20px,6vw,80px) 60px;max-width:760px;background:var(--olive);scroll-snap-align:start;}
   .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--yellow);font-weight:600;margin-bottom:14px;opacity:.85;}
   h1{font-size:clamp(34px,6vw,58px);margin-bottom:18px;color:var(--yellow);}
   .page-head p{color:var(--yellow-dim);font-size:16px;line-height:1.8;max-width:520px;}
@@ -40,10 +41,10 @@
      the sharp photo sits at 85% scale on top, its edge feathering into the
      blur beneath it so picture and frame blend with no hard seam — and
      since the frame is just the photo itself, it always matches. */
-  .stop{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background-color:#1c150e;border:none;transition:background-color .6s ease;}
+  .stop{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background-color:#1c150e;border:none;transition:background-color .6s ease;scroll-snap-align:start;scroll-snap-stop:always;}
   .stop-band{position:absolute;inset:0;overflow:hidden;}
   .stop-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(60px) brightness(.55) saturate(1.1);transform:scale(1.18);}
-  .stop-photo{position:absolute;top:50%;left:50%;width:85%;height:85%;transform:translate(-50%,-50%);object-fit:cover;-webkit-mask-image:radial-gradient(closest-side, black 76%, transparent 100%);mask-image:radial-gradient(closest-side, black 76%, transparent 100%);}
+  .stop-photo{position:absolute;top:50%;left:50%;width:66%;height:66%;transform:translate(-50%,-50%);object-fit:cover;-webkit-mask-image:radial-gradient(closest-side, black 58%, transparent 100%);mask-image:radial-gradient(closest-side, black 58%, transparent 100%);}
   .stop-band .scrim{position:absolute;inset:0;background:linear-gradient(0deg, rgba(0,0,0,.72) 0%, rgba(0,0,0,.15) 45%, rgba(0,0,0,0) 65%);}
 
   .stop-overlay{position:absolute;z-index:2;left:0;right:0;bottom:0;width:100%;padding:0 clamp(24px,7vw,90px) clamp(28px,5vw,52px);opacity:0;transform:translateY(20px);}
@@ -98,7 +99,7 @@
 <div class="page-head">
   <div class="eyebrow">RoamWithPete</div>
   <h1>Photography</h1>
-  <p>A practice in composition and perspective that feeds directly back into the design work — started in 2019. Two images have since placed as AGORA Top 10 Finalists. Five chapters, so far — scroll to read them in order.</p>
+  <p>Just the fun of composition and perspective — chasing new ways of seeing, one frame at a time.</p>
   <div class="scroll-cue">Scroll to walk through ↓</div>
 </div>
 
@@ -128,9 +129,9 @@
       <img class="stop-photo" src="2.jpg" alt="Ground squirrel portrait">
       <div class="scrim"></div>
       <div class="stop-overlay">
-        <div class="chapter-mark"><span class="chapter-index">02</span><span class="chapter-rule"></span><span class="chapter-word">Stillness</span></div>
+        <div class="chapter-mark"><span class="chapter-index">02</span><span class="chapter-rule"></span><span class="chapter-word">Static</span></div>
         <h2>2020, and the old photos kept me sane</h2>
-        <p>Then 2020 happened — the kind of year still strange to describe out loud. Isolation set in, and somehow it was the photos from before, from the freedom of past trips, that got me through it. Going back through them, then shooting again whenever I could, pulled me further into photography than any deliberate plan would have.</p>
+        <p>Then 2020 happened — the kind of year still strange to explain out loud. Isolation set in, and it was the old photos from past trips that got me through it, going back through them again and again. Somewhere in that routine, I started to notice the tiny details — including this curious fellow here.</p>
         <div class="frame-tag">2020</div>
       </div>
     </div>
