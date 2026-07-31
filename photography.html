@@ -16,22 +16,25 @@
     --nav-fg:var(--yellow); --nav-fg-dim:var(--yellow-dim);
   }
   *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-snap-type:y mandatory;}
+  html{scroll-snap-type:y proximity;}
   body{background:var(--bg);color:var(--text);font-family:'Inter',Arial,sans-serif;-webkit-font-smoothing:antialiased;}
   h1,h2,h3{font-family:'Fraunces',serif;letter-spacing:-.01em;}
   a{color:inherit;text-decoration:none;}
   img{display:block;max-width:100%;}
 
-  header.nav{position:sticky;top:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:18px clamp(20px,5vw,56px);background:rgba(32,38,15,.94);backdrop-filter:blur(6px);transition:background-color .5s ease,opacity .4s ease;}
-  header.nav.scrolled:not(:hover){opacity:.3;}
-  .nav-logo{font-family:'Fraunces',serif;font-weight:600;font-size:17px;color:var(--nav-fg);transition:color .5s ease;}
+  /* Nav is now a fixed, transparent watermark bar — no solid pill, so it
+     never blocks the picture beneath it. Stays pinned at 35% opacity for
+     branding, brightens slightly on hover so it's still usable. */
+  header.nav{position:fixed;top:0;left:0;right:0;z-index:400;display:flex;align-items:center;justify-content:space-between;padding:16px clamp(20px,5vw,56px);background:transparent;opacity:.35;transition:opacity .3s ease;}
+  header.nav:hover{opacity:.95;}
+  .nav-logo{font-family:'Fraunces',serif;font-weight:600;font-size:17px;color:var(--nav-fg);}
   .nav-links{display:flex;gap:24px;align-items:center;}
-  .nav-links a{font-size:13px;color:var(--nav-fg-dim);display:none;transition:color .5s ease;}
+  .nav-links a{font-size:13px;color:var(--nav-fg-dim);display:none;}
   @media(min-width:800px){.nav-links a{display:inline-block;}}
   .nav-links a:hover,.nav-links a.current{color:var(--accent);}
   .btn{display:inline-flex;padding:10px 20px;border-radius:2px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
 
-  .page-head{padding:90px clamp(20px,6vw,80px) 60px;max-width:760px;background:var(--olive);scroll-snap-align:start;}
+  .page-head{padding:100px clamp(20px,6vw,80px) 60px;max-width:760px;background:var(--olive);scroll-snap-align:start;}
   .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--yellow);font-weight:600;margin-bottom:14px;opacity:.85;}
   h1{font-size:clamp(34px,6vw,58px);margin-bottom:18px;color:var(--yellow);}
   .page-head p{color:var(--yellow-dim);font-size:16px;line-height:1.8;max-width:520px;}
@@ -39,23 +42,32 @@
 
   /* Each chapter: a true depth-of-field effect. The same photo sits behind
      itself — zoomed in much larger and heavily blurred, like an out-of-focus
-     background — while the actual photo stays perfectly sharp at 85% of the
-     frame, no fade or mask on the photo itself. */
+     background — while the actual photo stays perfectly sharp inside its
+     own frame. A faint "TheXuSpace" watermark sits between the blur and the
+     photo, so it only shows in the soft border, never over the picture. All
+     of the reading text (title, statement, tag) lives inside the photo's own
+     frame, never spilling past its edges. */
   .stop{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;background-color:#1c150e;border:none;transition:background-color .6s ease;scroll-snap-align:start;scroll-snap-stop:always;}
   .stop-band{position:absolute;inset:0;overflow:hidden;}
   .stop-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(45px) brightness(.5) saturate(1.15);transform:scale(1.6);}
-  .stop-photo{position:absolute;top:50%;left:50%;width:85%;height:85%;transform:translate(-50%,-50%);object-fit:cover;box-shadow:0 30px 80px rgba(0,0,0,.5);}
-  .stop-band .scrim{position:absolute;inset:0;background:linear-gradient(0deg, rgba(0,0,0,.72) 0%, rgba(0,0,0,.15) 45%, rgba(0,0,0,0) 65%);}
+  .brand-mark{position:absolute;top:6%;left:50%;transform:translateX(-50%);font-family:'Fraunces',serif;font-weight:600;font-size:clamp(26px,4.6vw,46px);letter-spacing:.08em;text-transform:uppercase;color:rgba(247,244,236,.35);white-space:nowrap;pointer-events:none;z-index:1;}
+  .photo-frame{position:absolute;top:50%;left:50%;width:85%;height:85%;transform:translate(-50%,-50%);overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5);z-index:2;}
+  #chapter2 .photo-frame{width:58%;height:58%;}
+  .stop-photo{width:100%;height:100%;object-fit:cover;display:block;}
+  .photo-frame .scrim{position:absolute;inset:0;background:linear-gradient(0deg, rgba(0,0,0,.72) 0%, rgba(0,0,0,.15) 45%, rgba(0,0,0,0) 65%);}
 
-  .stop-overlay{position:absolute;z-index:2;left:0;right:0;bottom:0;width:100%;padding:0 clamp(24px,7vw,90px) clamp(28px,5vw,52px);opacity:0;transform:translateY(20px);}
+  .photo-frame .frame-tag{position:absolute;top:14px;right:16px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#b9b0a0;background:rgba(0,0,0,.3);padding:5px 11px;border-radius:2px;backdrop-filter:blur(3px);}
+
+  .stop-overlay{position:absolute;z-index:2;left:0;right:0;bottom:0;width:100%;padding:0 clamp(18px,5vw,44px) clamp(20px,4vw,36px);opacity:0;transform:translateY(20px);}
   .chapter-mark{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
   .chapter-mark .chapter-index{font-family:'Fraunces',serif;font-size:15px;color:var(--stop-accent, var(--accent));letter-spacing:.14em;}
   .chapter-mark .chapter-rule{width:26px;height:1px;background:var(--stop-accent, var(--accent));opacity:.7;}
   .chapter-mark .chapter-word{font-family:'Fraunces',serif;font-style:italic;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#f7f4ec;}
+  #chapter1 .chapter-mark .chapter-index{color:#f7f4ec;}
+  #chapter1 .chapter-mark .chapter-rule{background:#f7f4ec;}
   .stop-overlay h2{font-size:clamp(20px,2.8vw,28px);margin-bottom:10px;line-height:1.2;color:#f7f4ec;max-width:620px;}
   #chapter1 .stop-overlay h2{font-size:clamp(36px,6vw,64px);opacity:.5;max-width:760px;}
-  .stop-overlay p{font-size:15px;line-height:1.75;color:#d9d3c4;max-width:560px;}
-  .stop-overlay .frame-tag{margin-top:12px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#b9b0a0;}
+  .stop-overlay p{font-size:15px;line-height:1.7;color:#d9d3c4;max-width:520px;}
 
   .collection-btn{position:absolute;top:50%;right:clamp(14px,3.5vw,44px);transform:translateY(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:8px;color:#f7f4ec;opacity:.9;}
   .collection-btn .arrow-circle{width:44px;height:44px;border-radius:50%;border:1px solid rgba(247,244,236,.45);display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .25s ease;background:rgba(0,0,0,.15);backdrop-filter:blur(4px);}
@@ -65,7 +77,7 @@
 
   /* Closing — a 1:1 square-tile mosaic of the archive behind the quote,
      dimmed with a scrim so the text and buttons stay readable. */
-  .closing{position:relative;padding:120px clamp(20px,6vw,80px) 100px;text-align:center;overflow:hidden;background:#141019;}
+  .closing{position:relative;padding:120px clamp(20px,6vw,80px) 100px;text-align:center;overflow:hidden;background:#141019;scroll-snap-align:start;}
   .closing-mosaic{position:absolute;inset:0;display:grid;grid-template-columns:repeat(10,1fr);z-index:0;}
   .closing-mosaic div{aspect-ratio:1/1;background-size:cover;background-position:center;filter:grayscale(.25) brightness(.55);}
   .closing-scrim{position:absolute;inset:0;background:linear-gradient(180deg, rgba(12,9,15,.55) 0%, rgba(12,9,15,.88) 100%);z-index:1;}
@@ -80,7 +92,7 @@
   .social-btn:hover{border-color:var(--accent);color:var(--accent);}
   .social-btn svg{width:15px;height:15px;flex:none;}
 
-  footer{padding:40px clamp(20px,6vw,80px);border-top:1px solid var(--line);background:var(--bg-deep);font-size:12px;color:var(--text-dim);text-align:center;}
+  footer{padding:40px clamp(20px,6vw,80px);border-top:1px solid var(--line);background:var(--bg-deep);font-size:12px;color:var(--text-dim);text-align:center;scroll-snap-align:start;}
   footer .welcome{font-family:'Fraunces',serif;font-style:italic;font-size:15px;color:var(--text);}
 </style>
 </head>
@@ -108,13 +120,16 @@
   <section class="stop" id="chapter1" data-img="1.jpg">
     <div class="stop-band">
       <img class="stop-bg" src="1.jpg" alt="" aria-hidden="true">
-      <img class="stop-photo" src="1.jpg" alt="Harbor seal on seaweed-covered rocks, Vancouver">
-      <div class="scrim"></div>
-      <div class="stop-overlay">
-        <div class="chapter-mark"><span class="chapter-index">01</span><span class="chapter-rule"></span><span class="chapter-word">Wander</span></div>
-        <h2>Beginner's luck</h2>
-        <p>It was just another day on the trip — the seal was lying there until a curious tourist nearby startled it awake. I got the shot without thinking much of it, then submitted it on a whim. It placed as an AGORA Top 10 Finalist. I still can't explain why — I just liked the picture.</p>
+      <div class="brand-mark">TheXuSpace</div>
+      <div class="photo-frame">
+        <img class="stop-photo" src="1.jpg" alt="Harbor seal on seaweed-covered rocks, Vancouver">
+        <div class="scrim"></div>
         <div class="frame-tag">Vancouver, 2019</div>
+        <div class="stop-overlay">
+          <div class="chapter-mark"><span class="chapter-index">01</span><span class="chapter-rule"></span><span class="chapter-word">Wander</span></div>
+          <h2>Beginner's luck</h2>
+          <p>It was just another day on the trip — the seal was lying there until a curious tourist nearby startled it awake. I grabbed the shot without thinking much of it, then submitted it on a whim — it placed as an AGORA Top 10 Finalist. I still can't explain why, I just liked the picture, and somehow that was enough to keep going.</p>
+        </div>
       </div>
     </div>
     <a class="collection-btn" href="collection-1.html">
@@ -126,13 +141,16 @@
   <section class="stop" id="chapter2" data-img="2.jpg">
     <div class="stop-band">
       <img class="stop-bg" src="2.jpg" alt="" aria-hidden="true">
-      <img class="stop-photo" src="2.jpg" alt="Ground squirrel portrait">
-      <div class="scrim"></div>
-      <div class="stop-overlay">
-        <div class="chapter-mark"><span class="chapter-index">02</span><span class="chapter-rule"></span><span class="chapter-word">Static</span></div>
-        <h2>2020, and the old photos kept me sane</h2>
-        <p>Then 2020 happened — the kind of year still strange to explain out loud. Isolation set in, and it was the old photos from past trips that got me through it, going back through them again and again. Somewhere in that routine, I started to notice the tiny details — including this curious fellow here.</p>
+      <div class="brand-mark">TheXuSpace</div>
+      <div class="photo-frame">
+        <img class="stop-photo" src="2.jpg" alt="Ground squirrel portrait">
+        <div class="scrim"></div>
         <div class="frame-tag">2020</div>
+        <div class="stop-overlay">
+          <div class="chapter-mark"><span class="chapter-index">02</span><span class="chapter-rule"></span><span class="chapter-word">Static</span></div>
+          <h2>2020, and the old photos kept me sane</h2>
+          <p>Then 2020 happened — the kind of year still strange to explain out loud. Isolation set in, and it was the old photos from past trips that got me through it, going back through them again and again. Somewhere in that routine, I started to notice the tiny details — including this curious fellow here, and it's a habit that never really left.</p>
+        </div>
       </div>
     </div>
     <a class="collection-btn" href="collection-2.html">
@@ -144,13 +162,16 @@
   <section class="stop" data-img="3.jpg">
     <div class="stop-band">
       <img class="stop-bg" src="3.jpg" alt="" aria-hidden="true">
-      <img class="stop-photo" src="3.jpg" alt="Standing under the Milky Way, Idaho">
-      <div class="scrim"></div>
-      <div class="stop-overlay">
-        <div class="chapter-mark"><span class="chapter-index">03</span><span class="chapter-rule"></span><span class="chapter-word">Wonder</span></div>
-        <h2>Not just looking at stars — bathing in them</h2>
-        <p>Then one night in Idaho. Not just looking up at stars, but standing under a sky so full it felt like bathing in a falling universe. Some photographs exist because you're documenting something. This one exists because I didn't want to forget what that felt like.</p>
+      <div class="brand-mark">TheXuSpace</div>
+      <div class="photo-frame">
+        <img class="stop-photo" src="3.jpg" alt="Standing under the Milky Way, Idaho">
+        <div class="scrim"></div>
         <div class="frame-tag">Idaho, 2021</div>
+        <div class="stop-overlay">
+          <div class="chapter-mark"><span class="chapter-index">03</span><span class="chapter-rule"></span><span class="chapter-word">Wonder</span></div>
+          <h2>Not just looking at stars — bathing in them</h2>
+          <p>Then one night in Idaho. Not just looking up at stars, but standing under a sky so full it felt like bathing in a falling universe. Some photographs exist because you're documenting something. This one exists because I didn't want to forget what that felt like — it's the kind of feeling a caption can't really hold.</p>
+        </div>
       </div>
     </div>
     <a class="collection-btn" href="collection-3.html">
@@ -162,13 +183,16 @@
   <section class="stop" data-img="4.jpg">
     <div class="stop-band">
       <img class="stop-bg" src="4.jpg" alt="" aria-hidden="true">
-      <img class="stop-photo" src="4.jpg" alt="Rooftop at dusk, RoamWithPete">
-      <div class="scrim"></div>
-      <div class="stop-overlay">
-        <div class="chapter-mark"><span class="chapter-index">04</span><span class="chapter-rule"></span><span class="chapter-word">Structure</span></div>
-        <h2>Life happens, and the eye changes with it</h2>
-        <p>Between 2022 and 2025, the way I looked changed. I got more observant — drawn into existing and conceptual architecture. My composition shifted with it, more horizontal, closer to 16:9 film framing, and I started posting the work differently to match.</p>
+      <div class="brand-mark">TheXuSpace</div>
+      <div class="photo-frame">
+        <img class="stop-photo" src="4.jpg" alt="Rooftop at dusk, RoamWithPete">
+        <div class="scrim"></div>
         <div class="frame-tag">2022 – 2025, RoamWithPete</div>
+        <div class="stop-overlay">
+          <div class="chapter-mark"><span class="chapter-index">04</span><span class="chapter-rule"></span><span class="chapter-word">Structure</span></div>
+          <h2>Life happens, and the eye changes with it</h2>
+          <p>Between 2022 and 2025, the way I looked changed. I got more observant — drawn into existing and conceptual architecture. My composition shifted with it, more horizontal, closer to 16:9 film framing, and I started posting the work differently to match. It's a shift I'm still refining today.</p>
+        </div>
       </div>
     </div>
     <a class="collection-btn" href="collection-4.html">
@@ -182,13 +206,16 @@
 <section class="stop" data-img="5.jpg">
   <div class="stop-band">
     <img class="stop-bg" src="5.jpg" alt="" aria-hidden="true">
-    <img class="stop-photo" src="5.jpg" alt="Horse portrait, black and white">
-    <div class="scrim"></div>
-    <div class="stop-overlay">
-      <div class="chapter-mark"><span class="chapter-index">05</span><span class="chapter-rule"></span><span class="chapter-word">Continuing</span></div>
-      <h2>Today, still learning what my perspective is</h2>
-      <p>And today — July 30, 2026 — this is still where I am: still looking, still figuring out what my own perspective is. Not a neat ending, just where the story happens to be standing right now. This isn't a closed chapter. It's the one I'm still writing.</p>
+    <div class="brand-mark">TheXuSpace</div>
+    <div class="photo-frame">
+      <img class="stop-photo" src="5.jpg" alt="Horse portrait, black and white">
+      <div class="scrim"></div>
       <div class="frame-tag">2026</div>
+      <div class="stop-overlay">
+        <div class="chapter-mark"><span class="chapter-index">05</span><span class="chapter-rule"></span><span class="chapter-word">Continuing</span></div>
+        <h2>Today, still learning what my perspective is</h2>
+        <p>And today — July 30, 2026 — this is still where I am: still looking, still figuring out what my own perspective is. Not a neat ending, just where the story happens to be standing right now. This isn't a closed chapter. It's the one I'm still writing, one frame at a time.</p>
+      </div>
     </div>
   </div>
   <a class="collection-btn" href="collection-5.html">
@@ -228,10 +255,10 @@
 <script>
   gsap.registerPlugin(ScrollTrigger);
 
-  const nav = document.getElementById('siteNav');
   const stops = Array.from(document.querySelectorAll('.stop'));
 
-  // ---- Sample each photo's dominant color once it loads ----
+  // ---- Sample each photo's dominant color once it loads (drives the
+  // chapter-index/rule accent color per chapter) ----
   function sampleColor(img){
     try{
       const c = document.createElement('canvas');
@@ -261,35 +288,6 @@
     if(img.complete) apply();
     else img.addEventListener('load', apply);
   });
-
-  // ---- Header follows whichever chapter is centered in view ----
-  const navObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if(entry.isIntersecting){
-        const stop = entry.target;
-        const color = stop.dataset.color || '#1c150e';
-        const light = stop.dataset.light === '1';
-        nav.style.backgroundColor = color;
-        nav.style.setProperty('--nav-fg', light ? '#1c150e' : '#f7f4ec');
-        nav.style.setProperty('--nav-fg-dim', light ? 'rgba(28,21,14,.7)' : 'rgba(247,244,236,.75)');
-        nav.classList.add('scrolled');
-      }
-    });
-  }, { rootMargin: '-48% 0px -48% 0px', threshold: 0 });
-  stops.forEach(stop => navObserver.observe(stop));
-
-  // Reset the header back to the page's own colors once scrolled back above the first chapter
-  const topObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if(entry.isIntersecting){
-        nav.style.backgroundColor = '';
-        nav.style.removeProperty('--nav-fg');
-        nav.style.removeProperty('--nav-fg-dim');
-        nav.classList.remove('scrolled');
-      }
-    });
-  }, { threshold: 0 });
-  topObserver.observe(document.querySelector('.page-head'));
 
   // ---- Build the closing mosaic (20 square tiles, cycling the 5 chapter photos) ----
   const mosaic = document.getElementById('closingMosaic');
