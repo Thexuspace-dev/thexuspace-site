@@ -24,21 +24,26 @@
      black so the page reads as one continuous dark scene behind the text.
      "Backdrop Drift" — a slow vertical pan, same animation family as the
      gallery wall's "Rail Shimmer" line, just much slower (26s vs 9s). */
-  .bg-blur{position:fixed;inset:0;z-index:-2;background-image:url('2.jpg');background-size:cover;background-position:center 0%;filter:blur(55px) brightness(.55) saturate(1.1);transform:scale(1.2);animation:backdropDrift 26s ease-in-out infinite;}
+  .bg-blur{position:fixed;inset:0;z-index:-2;background-image:url('2.jpg');background-size:cover;background-position:center 0%;filter:blur(55px) brightness(.68) saturate(1.1);transform:scale(1.2);animation:backdropDrift 26s ease-in-out infinite;}
   @keyframes backdropDrift{0%{background-position:center 0%;}50%{background-position:center 100%;}100%{background-position:center 0%;}}
   .bg-scrim{position:fixed;inset:0;z-index:-1;background:rgba(6,5,4,.85);}
 
-  header.nav{position:sticky;top:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:18px clamp(20px,5vw,56px);background:rgba(10,8,6,.55);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
-  .nav-logo{font-family:'Fraunces',serif;font-weight:600;font-size:17px;color:var(--text);}
-  .nav-back{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);display:flex;align-items:center;gap:8px;}
+  header.nav{position:sticky;top:0;z-index:500;display:flex;align-items:center;padding:26px clamp(20px,5vw,56px);background:rgba(10,8,6,.55);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  .nav-logo{font-family:'Fraunces',serif;font-weight:600;font-size:29px;color:var(--text);}
+  /* Sits directly above the chapter number/title now, instead of sharing
+     the header row with the logo. */
+  .nav-back{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);display:inline-flex;align-items:center;gap:8px;margin-bottom:18px;}
   .nav-back:hover{color:var(--accent);}
 
-  /* Fixed vertical rails on either edge of the screen for chapter-to-chapter
-     navigation — a spine-label read, sitting beside the content rather than
-     stacked below it. Chapter 1 has no left rail (nothing comes before it),
-     chapter 5 has no right rail (nothing comes after it yet). */
-  .side-nav{position:fixed;top:50%;transform:translateY(-50%);z-index:450;writing-mode:vertical-rl;text-orientation:mixed;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);transition:color .2s ease;}
-  .side-nav:hover{color:var(--accent);}
+  /* Fixed rails on either edge of the screen for chapter-to-chapter
+     navigation — each word stacked on its own line ("View" / "Next" or
+     "Last" / "Chapter"), sitting beside the content rather than below it.
+     Dimmed to 50% opacity by default, full color+opacity on hover.
+     Chapter 1 has no left rail (nothing comes before it), chapter 5 has
+     no right rail (nothing comes after it yet). */
+  .side-nav{position:fixed;top:50%;transform:translateY(-50%);z-index:450;display:flex;flex-direction:column;align-items:center;font-size:16px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);line-height:1.5;opacity:.5;transition:opacity .25s ease, color .25s ease;}
+  .side-nav:hover{opacity:1;color:var(--accent);}
+  .side-nav span{display:block;}
   .side-nav.left{left:18px;}
   .side-nav.right{right:18px;}
   @media(max-width:760px){.side-nav{display:none;}}
@@ -47,7 +52,7 @@
   /* Number + title share one line now, same treatment as the main
      photography page — no separate "Photography · Chapter N" eyebrow. */
   .chapter-head{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-top:8px;margin-bottom:12px;}
-  .chapter-head .chapter-num{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(26px,4.2vw,40px);color:var(--accent);letter-spacing:.04em;}
+  .chapter-head .chapter-num{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(20px,3.4vw,32px);color:var(--accent);letter-spacing:.04em;}
   .chapter-head .chapter-rule{width:32px;height:1px;background:var(--accent);opacity:.6;align-self:center;}
   .chapter-head h1{margin:0;font-size:clamp(26px,4.2vw,40px);color:var(--text);font-weight:600;}
   .frame-tag{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);margin-bottom:36px;}
@@ -90,12 +95,12 @@
 
 <header class="nav">
   <a class="nav-logo" href="index.html">TheXuSpace</a>
-  <a class="nav-back" href="photography.html">&larr; Back to Photography</a>
 </header>
 
-<a class="side-nav left" href="collection-1.html">View Last Chapter</a><a class="side-nav right" href="collection-3.html">View Next Chapter</a>
+<a class="side-nav left" href="collection-1.html"><span>View</span><span>Last</span><span>Chapter</span></a><a class="side-nav right" href="collection-3.html"><span>View</span><span>Next</span><span>Chapter</span></a>
 
 <main>
+  <a class="nav-back" href="photography.html">&larr; Back to Photography</a>
   <div class="chapter-head"><span class="chapter-num">02</span><span class="chapter-rule"></span><h1>2020, and the old photos kept me sane</h1></div>
   <div class="frame-tag">Colorado, 2020</div>
 
