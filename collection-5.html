@@ -49,12 +49,14 @@
   @media(max-width:760px){.side-nav{display:none;}}
 
   main{max-width:920px;margin:0 auto;padding:64px clamp(20px,6vw,40px) 100px;}
-  /* Number + title share one line now, same treatment as the main
-     photography page — no separate "Photography · Chapter N" eyebrow. */
-  .chapter-head{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-top:8px;margin-bottom:12px;}
-  .chapter-head .chapter-num{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(20px,3.4vw,32px);color:var(--accent);letter-spacing:.04em;}
-  .chapter-head .chapter-rule{width:32px;height:1px;background:var(--accent);opacity:.6;align-self:center;}
-  .chapter-head h1{margin:0;font-size:clamp(26px,4.2vw,40px);color:var(--text);font-weight:600;}
+  /* Number + title always share one line now, same treatment as the main
+     photography page — no separate "Photography · Chapter N" eyebrow.
+     flex-wrap is nowrap on purpose: a small script below shrinks both
+     font sizes together until the row fits instead of letting it wrap. */
+  .chapter-head{display:flex;align-items:baseline;gap:16px;flex-wrap:nowrap;margin-top:8px;margin-bottom:12px;overflow:hidden;}
+  .chapter-head .chapter-num{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(20px,3.4vw,32px);color:var(--accent);letter-spacing:.04em;white-space:nowrap;flex-shrink:0;}
+  .chapter-head .chapter-rule{width:32px;height:1px;background:var(--accent);opacity:.6;align-self:center;flex-shrink:0;}
+  .chapter-head h1{margin:0;font-size:clamp(26px,4.2vw,40px);color:var(--text);font-weight:600;white-space:nowrap;min-width:0;}
   .frame-tag{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);margin-bottom:36px;}
 
   .hero{width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:2px;margin-bottom:40px;box-shadow:0 30px 80px rgba(0,0,0,.55);}
@@ -97,7 +99,7 @@
   <a class="nav-logo" href="index.html">TheXuSpace</a>
 </header>
 
-<a class="side-nav left" href="collection-4.html"><span>View Last</span><span>Chapter</span></a>
+<a class="side-nav left" href="collection-4.html"><span>View Last</span><span>Chapter</span></a><a class="side-nav right" href="collections.html"><span>View All</span><span>Collections</span></a>
 
 <main>
   <a class="nav-back" href="photography.html">&larr; Back to Photography</a>
@@ -135,5 +137,34 @@
 </main>
 
 <footer>TheXuSpace &middot; Photography by Peter Xu</footer>
+
+<script>
+// Shrinks the chapter number + title together, in lockstep, until the
+// row fits on one line without wrapping — used instead of letting the
+// title wrap to a second line on long titles or narrow screens.
+(function(){
+  var head = document.querySelector('.chapter-head');
+  var num = head.querySelector('.chapter-num');
+  var h1 = head.querySelector('h1');
+  var baseNum = parseFloat(getComputedStyle(num).fontSize);
+  var baseH1 = parseFloat(getComputedStyle(h1).fontSize);
+  function fit(){
+    num.style.fontSize = '';
+    h1.style.fontSize = '';
+    var numSize = parseFloat(getComputedStyle(num).fontSize);
+    var h1Size = parseFloat(getComputedStyle(h1).fontSize);
+    var tries = 0;
+    while(head.scrollWidth > head.clientWidth + 1 && tries < 60 && h1Size > 14){
+      numSize -= 0.6;
+      h1Size -= 0.8;
+      num.style.fontSize = numSize + 'px';
+      h1.style.fontSize = h1Size + 'px';
+      tries++;
+    }
+  }
+  fit();
+  window.addEventListener('resize', fit);
+})();
+</script>
 </body>
 </html>
