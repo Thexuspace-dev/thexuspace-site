@@ -21,8 +21,11 @@
   img{display:block;max-width:100%;}
 
   /* Full-page blurred backdrop of the chapter's own photo, dimmed to ~85%
-     black so the page reads as one continuous dark scene behind the text. */
-  .bg-blur{position:fixed;inset:0;z-index:-2;background-image:url('1.jpg');background-size:cover;background-position:center;filter:blur(55px) brightness(.55) saturate(1.1);transform:scale(1.2);}
+     black so the page reads as one continuous dark scene behind the text.
+     "Backdrop Drift" — a slow vertical pan, same animation family as the
+     gallery wall's "Rail Shimmer" line, just much slower (26s vs 9s). */
+  .bg-blur{position:fixed;inset:0;z-index:-2;background-image:url('1.jpg');background-size:cover;background-position:center 0%;filter:blur(55px) brightness(.55) saturate(1.1);transform:scale(1.2);animation:backdropDrift 26s ease-in-out infinite;}
+  @keyframes backdropDrift{0%{background-position:center 0%;}50%{background-position:center 100%;}100%{background-position:center 0%;}}
   .bg-scrim{position:fixed;inset:0;z-index:-1;background:rgba(6,5,4,.85);}
 
   header.nav{position:sticky;top:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:18px clamp(20px,5vw,56px);background:rgba(10,8,6,.55);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
@@ -46,9 +49,9 @@
   .body-text p{margin-bottom:20px;}
 
   /* Gallery wall: a row of placeholder frames "hung" from a shimmering
-     rail line, standing in for photos not yet added to this collection.
-     The rail's color leans on --accent, the same warm tone pulled from
-     this chapter's own photo elsewhere on the site. */
+     rail line ("Rail Shimmer"), standing in for photos not yet added to
+     this collection. The rail's color leans on --accent, the same warm
+     tone pulled from this chapter's own photo elsewhere on the site. */
   .gallery-wall{position:relative;margin-top:64px;padding-top:60px;}
   .gallery-rail{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg, transparent, var(--accent) 25%, var(--text) 50%, var(--accent) 75%, transparent);background-size:300% 100%;opacity:.45;animation:railShimmer 9s ease-in-out infinite;}
   @keyframes railShimmer{0%{background-position:0% 0;}50%{background-position:100% 0;}100%{background-position:0% 0;}}
