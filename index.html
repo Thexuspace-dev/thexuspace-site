@@ -28,7 +28,10 @@
   .nav-links a:hover{color:var(--text);}
 
   #hero{position:relative;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;}
-  #hero .bg{position:absolute;inset:0;background-image:url('https://raw.githubusercontent.com/TheXuSpace/Design-Portfolio/main/Junde%20Xu%27s%20design%20portfolio%2031.jpeg');background-size:cover;background-position:center;opacity:.5;}
+  /* Soft light-blue blurred color field instead of a photo — a few
+     overlapping radial gradients, blurred and scaled up slightly past
+     the edges so the blur filter has no hard edge to reveal. */
+  #hero .bg{position:absolute;inset:-10%;background:radial-gradient(circle at 28% 22%, #cfe9fa 0%, transparent 55%), radial-gradient(circle at 78% 68%, #9cc9ea 0%, transparent 55%), linear-gradient(160deg, #d8eef9, #a7cfec);filter:blur(70px);opacity:.55;}
   #hero .scrim{position:absolute;inset:0;background:radial-gradient(circle at 50% 40%, rgba(14,12,10,.35), rgba(14,12,10,.92) 75%);}
   .hero-inner{position:relative;z-index:2;padding:0 24px;}
   .eyebrow{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:22px;}
