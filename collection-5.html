@@ -36,14 +36,15 @@
   .nav-back:hover{color:var(--accent);}
 
   /* Fixed rails on either edge of the screen for chapter-to-chapter
-     navigation — each word stacked on its own line ("View" / "Next" or
-     "Last" / "Chapter"), sitting beside the content rather than below it.
+     navigation — two stacked lines ("View Next"/"View Last" over
+     "Chapter"), sitting beside the content rather than below it. The two
+     lines sit tight against each other (line-height:1, no gap) so they
+     read as one solid block, same size and same centered width.
      Dimmed to 50% opacity by default, full color+opacity on hover.
-     Chapter 1 has no left rail (nothing comes before it), chapter 5 has
-     no right rail (nothing comes after it yet). */
-  .side-nav{position:fixed;top:50%;transform:translateY(-50%);z-index:450;display:flex;flex-direction:column;align-items:center;font-size:16px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);line-height:1.5;opacity:.5;transition:opacity .25s ease, color .25s ease;}
+     Chapter 1 has no left rail (nothing comes before it). */
+  .side-nav{position:fixed;top:50%;transform:translateY(-50%);z-index:450;display:flex;flex-direction:column;align-items:center;font-size:16px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);line-height:1;opacity:.5;transition:opacity .25s ease, color .25s ease;}
   .side-nav:hover{opacity:1;color:var(--accent);}
-  .side-nav span{display:block;}
+  .side-nav span{display:block;text-align:center;}
   .side-nav.left{left:18px;}
   .side-nav.right{right:18px;}
   @media(max-width:760px){.side-nav{display:none;}}
