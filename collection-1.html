@@ -36,18 +36,24 @@
   .nav-back:hover{color:var(--accent);}
 
   /* Fixed rails on either edge of the screen for chapter-to-chapter
-     navigation — two stacked lines ("View Next"/"View Last" over
-     "Chapter"), sitting beside the content rather than below it. The two
-     lines sit tight against each other (line-height:1, no gap) so they
-     read as one solid block, same size and same centered width.
-     Dimmed to 50% opacity by default, full color+opacity on hover.
-     Chapter 1 has no left rail (nothing comes before it). */
-  .side-nav{position:fixed;top:50%;transform:translateY(-50%);z-index:450;display:flex;flex-direction:column;align-items:center;font-size:16px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);line-height:1;opacity:.5;transition:opacity .25s ease, color .25s ease;}
+     navigation, turned sideways (vertical text, reading top-to-bottom)
+     and set in the same small type as the location/date tag under each
+     photo — same font-size, letter-spacing, uppercase and color as
+     .frame-tag, just rotated.
+
+     Anchored with left/right: calc(50% - 460px - 56px) instead of a
+     fixed pixel offset from the viewport edge — main is 920px wide
+     (460px half-width), so this always keeps a guaranteed 56px gap
+     between the rail and the edge of the photo/content column,
+     regardless of viewport width. It can no longer end up touching the
+     picture frame the way a flat 18px-from-edge offset could on
+     mid-width screens. Hidden below 1150px, where that gap would run
+     out of room. */
+  .side-nav{position:fixed;top:50%;transform:translateY(-50%);z-index:450;writing-mode:vertical-rl;text-orientation:mixed;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);white-space:nowrap;opacity:.5;transition:opacity .25s ease, color .25s ease;}
   .side-nav:hover{opacity:1;color:var(--accent);}
-  .side-nav span{display:block;text-align:center;}
-  .side-nav.left{left:18px;}
-  .side-nav.right{right:18px;}
-  @media(max-width:760px){.side-nav{display:none;}}
+  .side-nav.left{left:calc(50% - 460px - 56px);}
+  .side-nav.right{right:calc(50% - 460px - 56px);}
+  @media(max-width:1150px){.side-nav{display:none;}}
 
   main{max-width:920px;margin:0 auto;padding:64px clamp(20px,6vw,40px) 100px;}
   /* Number + title always share one line now, same treatment as the main
@@ -117,7 +123,7 @@
   <a class="nav-logo" href="index.html">TheXuSpace</a>
 </header>
 
-<a class="side-nav right" href="collection-2.html"><span>View Next</span><span>Chapter</span></a>
+<a class="side-nav right" href="collection-2.html">View Next Chapter</a>
 
 <main>
   <a class="nav-back" href="photography.html">&larr; Back to Photography</a>
