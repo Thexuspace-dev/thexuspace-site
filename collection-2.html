@@ -51,15 +51,21 @@
   /* Gallery wall: a row of placeholder frames "hung" from a shimmering
      rail line ("Rail Shimmer"), standing in for photos not yet added to
      this collection. The rail's color leans on --accent, the same warm
-     tone pulled from this chapter's own photo elsewhere on the site. */
-  .gallery-wall{position:relative;margin-top:64px;padding-top:60px;}
-  .gallery-rail{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg, transparent, var(--accent) 25%, var(--text) 50%, var(--accent) 75%, transparent);background-size:300% 100%;opacity:.45;animation:railShimmer 9s ease-in-out infinite;}
+     tone pulled from this chapter's own photo elsewhere on the site.
+     Breaks out of main's 920px column to spread full-bleed, each frame
+     ~40% larger than before, and dressed up like an actual museum-hung
+     print: wood border, mat, hanging wire, nail, and a cast wall shadow. */
+  .gallery-wall{position:relative;margin-top:64px;padding-top:70px;width:100vw;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);padding-left:clamp(24px,6vw,90px);padding-right:clamp(24px,6vw,90px);box-sizing:border-box;}
+  .gallery-rail{position:absolute;top:0;left:clamp(24px,6vw,90px);right:clamp(24px,6vw,90px);height:2px;background:linear-gradient(90deg, transparent, var(--accent) 25%, var(--text) 50%, var(--accent) 75%, transparent);background-size:300% 100%;opacity:.45;animation:railShimmer 9s ease-in-out infinite;}
   @keyframes railShimmer{0%{background-position:0% 0;}50%{background-position:100% 0;}100%{background-position:0% 0;}}
-  .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:36px 28px;}
-  @media(max-width:640px){.gallery-grid{grid-template-columns:repeat(2,1fr);}}
-  .gallery-frame{position:relative;aspect-ratio:4/5;background:linear-gradient(150deg,#1c1712,#0e0c0a);border:1px solid var(--line);border-radius:1px;display:flex;align-items:center;justify-content:center;box-shadow:0 18px 36px rgba(0,0,0,.45);}
-  .gallery-frame::before{content:'';position:absolute;top:-28px;left:50%;width:1px;height:28px;background:linear-gradient(180deg, var(--accent), transparent);opacity:.5;}
-  .gallery-frame span{font-family:'Fraunces',serif;font-style:italic;font-size:11px;letter-spacing:.04em;color:rgba(242,237,226,.3);}
+  .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:64px 52px;max-width:1500px;margin:0 auto;}
+  @media(max-width:900px){.gallery-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:560px){.gallery-grid{grid-template-columns:1fr;}}
+  .gallery-frame{position:relative;aspect-ratio:4/5;background:#e9e3d4;border:12px solid #2b2118;border-radius:1px;padding:16px;box-shadow:0 34px 60px rgba(0,0,0,.55), 0 1px 0 rgba(255,255,255,.05) inset;}
+  .gallery-frame .mat{width:100%;height:100%;background:linear-gradient(150deg,#1c1712,#0e0c0a);display:flex;align-items:center;justify-content:center;}
+  .gallery-frame::before{content:'';position:absolute;top:-40px;left:50%;width:1px;height:40px;background:linear-gradient(180deg, var(--accent), transparent);opacity:.55;}
+  .gallery-frame::after{content:'';position:absolute;top:-42px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:var(--accent);opacity:.8;box-shadow:0 0 8px var(--accent);}
+  .gallery-frame span{font-family:'Fraunces',serif;font-style:italic;font-size:12px;letter-spacing:.04em;color:rgba(242,237,226,.3);}
 
   .more-note{margin-top:24px;font-size:13px;color:var(--text-dim);}
 
@@ -87,27 +93,27 @@
   <div class="hero"><img src="2.jpg" alt="Static — Colorado, 2020"></div>
 
   <div class="body-text">
-    <p>Then 2020 happened &mdash; the kind of year still strange to explain out loud. Isolation set in, and it was the old photos from past trips that got me through it, going back through them again and again. Somewhere in that routine, I started to notice the tiny details &mdash; including this curious fellow here &mdash; and it turned a quiet, difficult year into the start of a habit I never really dropped.</p>
+    <p>During those early days of isolation, I learned that &lsquo;you could hear a pin drop&rsquo; wasn't just an expression &mdash; it was practically the soundtrack, broken only by the click of a shutter. I started noticing something much smaller: the details in every corner, the small things we never seemed to enjoy because life moved too fast to see them. Everything felt frozen in time. That stillness, that silence, and the discovery that came with it, little by little &mdash; not just in the details, but in the freedom to travel, still tucked away in the stash of photos from before the shutdown.</p>
   </div>
 
   <div class="gallery-wall">
     <div class="gallery-rail"></div>
     <div class="gallery-grid">
-      <div class="gallery-frame"><span>Coming Soon</span></div>
-      <div class="gallery-frame"><span>Coming Soon</span></div>
-      <div class="gallery-frame"><span>Coming Soon</span></div>
-      <div class="gallery-frame"><span>Coming Soon</span></div>
-      <div class="gallery-frame"><span>Coming Soon</span></div>
-      <div class="gallery-frame"><span>Coming Soon</span></div>
-      <div class="gallery-frame"><span>Coming Soon</span></div>
-      <div class="gallery-frame"><span>Coming Soon</span></div>
-      <div class="gallery-frame"><span>Coming Soon</span></div>
-      <div class="gallery-frame"><span>Coming Soon</span></div>
-      <div class="gallery-frame"><span>Coming Soon</span></div>
-      <div class="gallery-frame"><span>Coming Soon</span></div>
-      <div class="gallery-frame"><span>Coming Soon</span></div>
-      <div class="gallery-frame"><span>Coming Soon</span></div>
-      <div class="gallery-frame"><span>Coming Soon</span></div>
+      <div class="gallery-frame"><div class="mat"><span>Coming Soon</span></div></div>
+      <div class="gallery-frame"><div class="mat"><span>Coming Soon</span></div></div>
+      <div class="gallery-frame"><div class="mat"><span>Coming Soon</span></div></div>
+      <div class="gallery-frame"><div class="mat"><span>Coming Soon</span></div></div>
+      <div class="gallery-frame"><div class="mat"><span>Coming Soon</span></div></div>
+      <div class="gallery-frame"><div class="mat"><span>Coming Soon</span></div></div>
+      <div class="gallery-frame"><div class="mat"><span>Coming Soon</span></div></div>
+      <div class="gallery-frame"><div class="mat"><span>Coming Soon</span></div></div>
+      <div class="gallery-frame"><div class="mat"><span>Coming Soon</span></div></div>
+      <div class="gallery-frame"><div class="mat"><span>Coming Soon</span></div></div>
+      <div class="gallery-frame"><div class="mat"><span>Coming Soon</span></div></div>
+      <div class="gallery-frame"><div class="mat"><span>Coming Soon</span></div></div>
+      <div class="gallery-frame"><div class="mat"><span>Coming Soon</span></div></div>
+      <div class="gallery-frame"><div class="mat"><span>Coming Soon</span></div></div>
+      <div class="gallery-frame"><div class="mat"><span>Coming Soon</span></div></div>
     </div>
   </div>
 
