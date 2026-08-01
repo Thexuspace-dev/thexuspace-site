@@ -66,37 +66,39 @@
   .body-text{max-width:100%;font-size:17px;line-height:1.9;color:var(--text-dim);}
   .body-text p{margin-bottom:20px;}
 
-  /* Gallery wall: a row of frames "hung" from a shimmering rail line
-     ("Rail Shimmer"), standing in for photos not yet added to this
-     collection. The rail's color leans on --accent, the same warm tone
-     pulled from this chapter's own photo elsewhere on the site. Breaks
-     out of main's 920px column to spread full-bleed.
+  /* Gallery wall: a row of photos "hung" on a plaster-toned wall panel,
+     from a shimmering rail line ("Rail Shimmer") overhead — standing in
+     for photos not yet added to this collection. Breaks out of main's
+     920px column to spread full-bleed.
 
-     Each frame is a hand-drawn sketch outline instead of a realistic
-     museum frame — two slightly different wobbly rectangle paths
-     ("boiling lines", the classic hand-drawn-animation trick) swap in
-     and out every half second, so the line never quite sits still. It's
-     meant to feel alive, like the memory itself, with the photo just
-     hanging there inside it. */
+     No drawn frame around each photo this time — instead a single,
+     almost-invisible thread drops from the rail to the photo, like it's
+     the only thing holding the print to the wall. It's rendered in a
+     chalky off-white (an SVG feTurbulence/feDisplacementMap filter
+     roughens the stroke so it reads as chalk, not a clean vector line),
+     and — same "boiling lines" trick as before — two slightly offset
+     copies of the thread swap every 500ms so it never sits perfectly
+     still. */
   .gallery-wall{position:relative;margin-top:64px;padding-top:70px;width:100vw;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);padding-left:clamp(24px,6vw,90px);padding-right:clamp(24px,6vw,90px);box-sizing:border-box;}
   .gallery-rail{position:absolute;top:0;left:clamp(24px,6vw,90px);right:clamp(24px,6vw,90px);height:2px;background:linear-gradient(90deg, transparent, var(--accent) 25%, var(--text) 50%, var(--accent) 75%, transparent);background-size:300% 100%;opacity:.45;animation:railShimmer 9s ease-in-out infinite;}
   @keyframes railShimmer{0%{background-position:0% 0;}50%{background-position:100% 0;}100%{background-position:0% 0;}}
   .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:80px 52px;max-width:1500px;margin:0 auto;}
   @media(max-width:900px){.gallery-grid{grid-template-columns:repeat(2,1fr);}}
   @media(max-width:560px){.gallery-grid{grid-template-columns:1fr;}}
-  .gallery-frame{position:relative;aspect-ratio:4/5;background:transparent;}
+  /* The frame itself IS the wall — a plaster-toned panel the photo sits
+     against, not a black mat. */
+  .gallery-frame{position:relative;aspect-ratio:4/5;background:linear-gradient(155deg,#3a3327,#2a2419 60%,#241f16);border-radius:2px;box-shadow:0 20px 45px rgba(0,0,0,.4);}
   .gallery-frame .sketch-frame{position:absolute;inset:0;width:100%;height:100%;overflow:visible;}
-  .gallery-frame .sketch-frame path{fill:none;stroke:var(--accent);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
-  .gallery-frame .sketch-frame path.hook{stroke:var(--text-dim);stroke-width:1.8;}
-  /* "Boiling lines": path .a and path .b are near-duplicates, drawn a
-     few pixels apart, and swapped every 500ms with a hard cut (steps(1),
-     not a fade) — the abrupt swap is what reads as a living, unsteady
-     hand-drawn line rather than a smooth wobble. */
+  .gallery-frame .sketch-frame path{fill:none;stroke:rgba(247,244,236,.55);stroke-width:1.3;stroke-linecap:round;}
+  /* "Boiling lines": path .a and path .b are near-duplicate thread
+     shapes, drawn a couple of pixels apart, swapped every 500ms with a
+     hard cut (steps(1), not a fade) — the abrupt swap reads as a
+     living, unsteady hand-drawn line rather than a smooth wobble. */
   .gallery-frame .sketch-frame .a{animation:boilA .5s steps(1) infinite;}
   .gallery-frame .sketch-frame .b{animation:boilB .5s steps(1) infinite;}
   @keyframes boilA{0%,49%{opacity:1;}50%,100%{opacity:0;}}
   @keyframes boilB{0%,49%{opacity:0;}50%,100%{opacity:1;}}
-  .gallery-frame .mat{position:absolute;inset:22px;background:linear-gradient(150deg,#1c1712,#0e0c0a);display:flex;align-items:center;justify-content:center;border-radius:1px;overflow:hidden;}
+  .gallery-frame .mat{position:absolute;left:50%;top:38px;transform:translateX(-50%);width:76%;height:calc(100% - 66px);background:linear-gradient(150deg,#1c1712,#0e0c0a);display:flex;align-items:center;justify-content:center;box-shadow:0 22px 44px rgba(0,0,0,.55);}
   .gallery-frame .mat img{width:100%;height:100%;object-fit:cover;}
   .gallery-frame span{font-family:'Fraunces',serif;font-style:italic;font-size:12px;letter-spacing:.04em;color:rgba(242,237,226,.3);}
 
@@ -133,136 +135,196 @@
     <div class="gallery-grid">
       <div class="gallery-frame">
         <svg class="sketch-frame" viewBox="0 0 200 250" preserveAspectRatio="none">
-          <path class="hook a" d="M92,-8 C90,-4 90,2 96,4 C102,6 106,2 106,-4"/>
-          <path class="hook b" d="M94,-9 C91,-5 92,3 97,5 C103,7 105,1 105,-5"/>
-          <path class="a" d="M12,18 C10,16 14,14 20,14 L180,12 C186,12 190,16 189,22 L192,230 C193,236 188,240 182,239 L18,238 C12,238 8,234 9,228 Z"/>
-          <path class="b" d="M14,16 C12,18 16,12 22,13 L178,15 C184,14 188,18 187,24 L190,228 C191,234 186,238 180,237 L16,236 C10,236 9,232 11,226 Z"/>
+          <defs>
+            <filter id="chalk0" x="-40%" y="-40%" width="180%" height="180%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="1" result="noise"/>
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.5"/>
+            </filter>
+          </defs>
+          <path class="a" filter="url(#chalk0)" d="M100,-40 C99,-18 101,-2 100,38"/>
+          <path class="b" filter="url(#chalk0)" d="M101,-41 C102,-17 99,-3 101,37"/>
         </svg>
         <div class="mat"><span>Coming Soon</span></div>
       </div>
       <div class="gallery-frame">
         <svg class="sketch-frame" viewBox="0 0 200 250" preserveAspectRatio="none">
-          <path class="hook a" d="M92,-8 C90,-4 90,2 96,4 C102,6 106,2 106,-4"/>
-          <path class="hook b" d="M94,-9 C91,-5 92,3 97,5 C103,7 105,1 105,-5"/>
-          <path class="a" d="M12,18 C10,16 14,14 20,14 L180,12 C186,12 190,16 189,22 L192,230 C193,236 188,240 182,239 L18,238 C12,238 8,234 9,228 Z"/>
-          <path class="b" d="M14,16 C12,18 16,12 22,13 L178,15 C184,14 188,18 187,24 L190,228 C191,234 186,238 180,237 L16,236 C10,236 9,232 11,226 Z"/>
+          <defs>
+            <filter id="chalk1" x="-40%" y="-40%" width="180%" height="180%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="2" result="noise"/>
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.5"/>
+            </filter>
+          </defs>
+          <path class="a" filter="url(#chalk1)" d="M100,-40 C99,-18 101,-2 100,38"/>
+          <path class="b" filter="url(#chalk1)" d="M101,-41 C102,-17 99,-3 101,37"/>
         </svg>
         <div class="mat"><span>Coming Soon</span></div>
       </div>
       <div class="gallery-frame">
         <svg class="sketch-frame" viewBox="0 0 200 250" preserveAspectRatio="none">
-          <path class="hook a" d="M92,-8 C90,-4 90,2 96,4 C102,6 106,2 106,-4"/>
-          <path class="hook b" d="M94,-9 C91,-5 92,3 97,5 C103,7 105,1 105,-5"/>
-          <path class="a" d="M12,18 C10,16 14,14 20,14 L180,12 C186,12 190,16 189,22 L192,230 C193,236 188,240 182,239 L18,238 C12,238 8,234 9,228 Z"/>
-          <path class="b" d="M14,16 C12,18 16,12 22,13 L178,15 C184,14 188,18 187,24 L190,228 C191,234 186,238 180,237 L16,236 C10,236 9,232 11,226 Z"/>
+          <defs>
+            <filter id="chalk2" x="-40%" y="-40%" width="180%" height="180%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3" result="noise"/>
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.5"/>
+            </filter>
+          </defs>
+          <path class="a" filter="url(#chalk2)" d="M100,-40 C99,-18 101,-2 100,38"/>
+          <path class="b" filter="url(#chalk2)" d="M101,-41 C102,-17 99,-3 101,37"/>
         </svg>
         <div class="mat"><span>Coming Soon</span></div>
       </div>
       <div class="gallery-frame">
         <svg class="sketch-frame" viewBox="0 0 200 250" preserveAspectRatio="none">
-          <path class="hook a" d="M92,-8 C90,-4 90,2 96,4 C102,6 106,2 106,-4"/>
-          <path class="hook b" d="M94,-9 C91,-5 92,3 97,5 C103,7 105,1 105,-5"/>
-          <path class="a" d="M12,18 C10,16 14,14 20,14 L180,12 C186,12 190,16 189,22 L192,230 C193,236 188,240 182,239 L18,238 C12,238 8,234 9,228 Z"/>
-          <path class="b" d="M14,16 C12,18 16,12 22,13 L178,15 C184,14 188,18 187,24 L190,228 C191,234 186,238 180,237 L16,236 C10,236 9,232 11,226 Z"/>
+          <defs>
+            <filter id="chalk3" x="-40%" y="-40%" width="180%" height="180%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4" result="noise"/>
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.5"/>
+            </filter>
+          </defs>
+          <path class="a" filter="url(#chalk3)" d="M100,-40 C99,-18 101,-2 100,38"/>
+          <path class="b" filter="url(#chalk3)" d="M101,-41 C102,-17 99,-3 101,37"/>
         </svg>
         <div class="mat"><span>Coming Soon</span></div>
       </div>
       <div class="gallery-frame">
         <svg class="sketch-frame" viewBox="0 0 200 250" preserveAspectRatio="none">
-          <path class="hook a" d="M92,-8 C90,-4 90,2 96,4 C102,6 106,2 106,-4"/>
-          <path class="hook b" d="M94,-9 C91,-5 92,3 97,5 C103,7 105,1 105,-5"/>
-          <path class="a" d="M12,18 C10,16 14,14 20,14 L180,12 C186,12 190,16 189,22 L192,230 C193,236 188,240 182,239 L18,238 C12,238 8,234 9,228 Z"/>
-          <path class="b" d="M14,16 C12,18 16,12 22,13 L178,15 C184,14 188,18 187,24 L190,228 C191,234 186,238 180,237 L16,236 C10,236 9,232 11,226 Z"/>
+          <defs>
+            <filter id="chalk4" x="-40%" y="-40%" width="180%" height="180%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="5" result="noise"/>
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.5"/>
+            </filter>
+          </defs>
+          <path class="a" filter="url(#chalk4)" d="M100,-40 C99,-18 101,-2 100,38"/>
+          <path class="b" filter="url(#chalk4)" d="M101,-41 C102,-17 99,-3 101,37"/>
         </svg>
         <div class="mat"><span>Coming Soon</span></div>
       </div>
       <div class="gallery-frame">
         <svg class="sketch-frame" viewBox="0 0 200 250" preserveAspectRatio="none">
-          <path class="hook a" d="M92,-8 C90,-4 90,2 96,4 C102,6 106,2 106,-4"/>
-          <path class="hook b" d="M94,-9 C91,-5 92,3 97,5 C103,7 105,1 105,-5"/>
-          <path class="a" d="M12,18 C10,16 14,14 20,14 L180,12 C186,12 190,16 189,22 L192,230 C193,236 188,240 182,239 L18,238 C12,238 8,234 9,228 Z"/>
-          <path class="b" d="M14,16 C12,18 16,12 22,13 L178,15 C184,14 188,18 187,24 L190,228 C191,234 186,238 180,237 L16,236 C10,236 9,232 11,226 Z"/>
+          <defs>
+            <filter id="chalk5" x="-40%" y="-40%" width="180%" height="180%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="6" result="noise"/>
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.5"/>
+            </filter>
+          </defs>
+          <path class="a" filter="url(#chalk5)" d="M100,-40 C99,-18 101,-2 100,38"/>
+          <path class="b" filter="url(#chalk5)" d="M101,-41 C102,-17 99,-3 101,37"/>
         </svg>
         <div class="mat"><span>Coming Soon</span></div>
       </div>
       <div class="gallery-frame">
         <svg class="sketch-frame" viewBox="0 0 200 250" preserveAspectRatio="none">
-          <path class="hook a" d="M92,-8 C90,-4 90,2 96,4 C102,6 106,2 106,-4"/>
-          <path class="hook b" d="M94,-9 C91,-5 92,3 97,5 C103,7 105,1 105,-5"/>
-          <path class="a" d="M12,18 C10,16 14,14 20,14 L180,12 C186,12 190,16 189,22 L192,230 C193,236 188,240 182,239 L18,238 C12,238 8,234 9,228 Z"/>
-          <path class="b" d="M14,16 C12,18 16,12 22,13 L178,15 C184,14 188,18 187,24 L190,228 C191,234 186,238 180,237 L16,236 C10,236 9,232 11,226 Z"/>
+          <defs>
+            <filter id="chalk6" x="-40%" y="-40%" width="180%" height="180%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="noise"/>
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.5"/>
+            </filter>
+          </defs>
+          <path class="a" filter="url(#chalk6)" d="M100,-40 C99,-18 101,-2 100,38"/>
+          <path class="b" filter="url(#chalk6)" d="M101,-41 C102,-17 99,-3 101,37"/>
         </svg>
         <div class="mat"><span>Coming Soon</span></div>
       </div>
       <div class="gallery-frame">
         <svg class="sketch-frame" viewBox="0 0 200 250" preserveAspectRatio="none">
-          <path class="hook a" d="M92,-8 C90,-4 90,2 96,4 C102,6 106,2 106,-4"/>
-          <path class="hook b" d="M94,-9 C91,-5 92,3 97,5 C103,7 105,1 105,-5"/>
-          <path class="a" d="M12,18 C10,16 14,14 20,14 L180,12 C186,12 190,16 189,22 L192,230 C193,236 188,240 182,239 L18,238 C12,238 8,234 9,228 Z"/>
-          <path class="b" d="M14,16 C12,18 16,12 22,13 L178,15 C184,14 188,18 187,24 L190,228 C191,234 186,238 180,237 L16,236 C10,236 9,232 11,226 Z"/>
+          <defs>
+            <filter id="chalk7" x="-40%" y="-40%" width="180%" height="180%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="8" result="noise"/>
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.5"/>
+            </filter>
+          </defs>
+          <path class="a" filter="url(#chalk7)" d="M100,-40 C99,-18 101,-2 100,38"/>
+          <path class="b" filter="url(#chalk7)" d="M101,-41 C102,-17 99,-3 101,37"/>
         </svg>
         <div class="mat"><span>Coming Soon</span></div>
       </div>
       <div class="gallery-frame">
         <svg class="sketch-frame" viewBox="0 0 200 250" preserveAspectRatio="none">
-          <path class="hook a" d="M92,-8 C90,-4 90,2 96,4 C102,6 106,2 106,-4"/>
-          <path class="hook b" d="M94,-9 C91,-5 92,3 97,5 C103,7 105,1 105,-5"/>
-          <path class="a" d="M12,18 C10,16 14,14 20,14 L180,12 C186,12 190,16 189,22 L192,230 C193,236 188,240 182,239 L18,238 C12,238 8,234 9,228 Z"/>
-          <path class="b" d="M14,16 C12,18 16,12 22,13 L178,15 C184,14 188,18 187,24 L190,228 C191,234 186,238 180,237 L16,236 C10,236 9,232 11,226 Z"/>
+          <defs>
+            <filter id="chalk8" x="-40%" y="-40%" width="180%" height="180%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="9" result="noise"/>
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.5"/>
+            </filter>
+          </defs>
+          <path class="a" filter="url(#chalk8)" d="M100,-40 C99,-18 101,-2 100,38"/>
+          <path class="b" filter="url(#chalk8)" d="M101,-41 C102,-17 99,-3 101,37"/>
         </svg>
         <div class="mat"><span>Coming Soon</span></div>
       </div>
       <div class="gallery-frame">
         <svg class="sketch-frame" viewBox="0 0 200 250" preserveAspectRatio="none">
-          <path class="hook a" d="M92,-8 C90,-4 90,2 96,4 C102,6 106,2 106,-4"/>
-          <path class="hook b" d="M94,-9 C91,-5 92,3 97,5 C103,7 105,1 105,-5"/>
-          <path class="a" d="M12,18 C10,16 14,14 20,14 L180,12 C186,12 190,16 189,22 L192,230 C193,236 188,240 182,239 L18,238 C12,238 8,234 9,228 Z"/>
-          <path class="b" d="M14,16 C12,18 16,12 22,13 L178,15 C184,14 188,18 187,24 L190,228 C191,234 186,238 180,237 L16,236 C10,236 9,232 11,226 Z"/>
+          <defs>
+            <filter id="chalk9" x="-40%" y="-40%" width="180%" height="180%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="1" result="noise"/>
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.5"/>
+            </filter>
+          </defs>
+          <path class="a" filter="url(#chalk9)" d="M100,-40 C99,-18 101,-2 100,38"/>
+          <path class="b" filter="url(#chalk9)" d="M101,-41 C102,-17 99,-3 101,37"/>
         </svg>
         <div class="mat"><span>Coming Soon</span></div>
       </div>
       <div class="gallery-frame">
         <svg class="sketch-frame" viewBox="0 0 200 250" preserveAspectRatio="none">
-          <path class="hook a" d="M92,-8 C90,-4 90,2 96,4 C102,6 106,2 106,-4"/>
-          <path class="hook b" d="M94,-9 C91,-5 92,3 97,5 C103,7 105,1 105,-5"/>
-          <path class="a" d="M12,18 C10,16 14,14 20,14 L180,12 C186,12 190,16 189,22 L192,230 C193,236 188,240 182,239 L18,238 C12,238 8,234 9,228 Z"/>
-          <path class="b" d="M14,16 C12,18 16,12 22,13 L178,15 C184,14 188,18 187,24 L190,228 C191,234 186,238 180,237 L16,236 C10,236 9,232 11,226 Z"/>
+          <defs>
+            <filter id="chalk10" x="-40%" y="-40%" width="180%" height="180%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="2" result="noise"/>
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.5"/>
+            </filter>
+          </defs>
+          <path class="a" filter="url(#chalk10)" d="M100,-40 C99,-18 101,-2 100,38"/>
+          <path class="b" filter="url(#chalk10)" d="M101,-41 C102,-17 99,-3 101,37"/>
         </svg>
         <div class="mat"><span>Coming Soon</span></div>
       </div>
       <div class="gallery-frame">
         <svg class="sketch-frame" viewBox="0 0 200 250" preserveAspectRatio="none">
-          <path class="hook a" d="M92,-8 C90,-4 90,2 96,4 C102,6 106,2 106,-4"/>
-          <path class="hook b" d="M94,-9 C91,-5 92,3 97,5 C103,7 105,1 105,-5"/>
-          <path class="a" d="M12,18 C10,16 14,14 20,14 L180,12 C186,12 190,16 189,22 L192,230 C193,236 188,240 182,239 L18,238 C12,238 8,234 9,228 Z"/>
-          <path class="b" d="M14,16 C12,18 16,12 22,13 L178,15 C184,14 188,18 187,24 L190,228 C191,234 186,238 180,237 L16,236 C10,236 9,232 11,226 Z"/>
+          <defs>
+            <filter id="chalk11" x="-40%" y="-40%" width="180%" height="180%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3" result="noise"/>
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.5"/>
+            </filter>
+          </defs>
+          <path class="a" filter="url(#chalk11)" d="M100,-40 C99,-18 101,-2 100,38"/>
+          <path class="b" filter="url(#chalk11)" d="M101,-41 C102,-17 99,-3 101,37"/>
         </svg>
         <div class="mat"><span>Coming Soon</span></div>
       </div>
       <div class="gallery-frame">
         <svg class="sketch-frame" viewBox="0 0 200 250" preserveAspectRatio="none">
-          <path class="hook a" d="M92,-8 C90,-4 90,2 96,4 C102,6 106,2 106,-4"/>
-          <path class="hook b" d="M94,-9 C91,-5 92,3 97,5 C103,7 105,1 105,-5"/>
-          <path class="a" d="M12,18 C10,16 14,14 20,14 L180,12 C186,12 190,16 189,22 L192,230 C193,236 188,240 182,239 L18,238 C12,238 8,234 9,228 Z"/>
-          <path class="b" d="M14,16 C12,18 16,12 22,13 L178,15 C184,14 188,18 187,24 L190,228 C191,234 186,238 180,237 L16,236 C10,236 9,232 11,226 Z"/>
+          <defs>
+            <filter id="chalk12" x="-40%" y="-40%" width="180%" height="180%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4" result="noise"/>
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.5"/>
+            </filter>
+          </defs>
+          <path class="a" filter="url(#chalk12)" d="M100,-40 C99,-18 101,-2 100,38"/>
+          <path class="b" filter="url(#chalk12)" d="M101,-41 C102,-17 99,-3 101,37"/>
         </svg>
         <div class="mat"><span>Coming Soon</span></div>
       </div>
       <div class="gallery-frame">
         <svg class="sketch-frame" viewBox="0 0 200 250" preserveAspectRatio="none">
-          <path class="hook a" d="M92,-8 C90,-4 90,2 96,4 C102,6 106,2 106,-4"/>
-          <path class="hook b" d="M94,-9 C91,-5 92,3 97,5 C103,7 105,1 105,-5"/>
-          <path class="a" d="M12,18 C10,16 14,14 20,14 L180,12 C186,12 190,16 189,22 L192,230 C193,236 188,240 182,239 L18,238 C12,238 8,234 9,228 Z"/>
-          <path class="b" d="M14,16 C12,18 16,12 22,13 L178,15 C184,14 188,18 187,24 L190,228 C191,234 186,238 180,237 L16,236 C10,236 9,232 11,226 Z"/>
+          <defs>
+            <filter id="chalk13" x="-40%" y="-40%" width="180%" height="180%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="5" result="noise"/>
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.5"/>
+            </filter>
+          </defs>
+          <path class="a" filter="url(#chalk13)" d="M100,-40 C99,-18 101,-2 100,38"/>
+          <path class="b" filter="url(#chalk13)" d="M101,-41 C102,-17 99,-3 101,37"/>
         </svg>
         <div class="mat"><span>Coming Soon</span></div>
       </div>
       <div class="gallery-frame">
         <svg class="sketch-frame" viewBox="0 0 200 250" preserveAspectRatio="none">
-          <path class="hook a" d="M92,-8 C90,-4 90,2 96,4 C102,6 106,2 106,-4"/>
-          <path class="hook b" d="M94,-9 C91,-5 92,3 97,5 C103,7 105,1 105,-5"/>
-          <path class="a" d="M12,18 C10,16 14,14 20,14 L180,12 C186,12 190,16 189,22 L192,230 C193,236 188,240 182,239 L18,238 C12,238 8,234 9,228 Z"/>
-          <path class="b" d="M14,16 C12,18 16,12 22,13 L178,15 C184,14 188,18 187,24 L190,228 C191,234 186,238 180,237 L16,236 C10,236 9,232 11,226 Z"/>
+          <defs>
+            <filter id="chalk14" x="-40%" y="-40%" width="180%" height="180%">
+              <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="6" result="noise"/>
+              <feDisplacementMap in="SourceGraphic" in2="noise" scale="3.5"/>
+            </filter>
+          </defs>
+          <path class="a" filter="url(#chalk14)" d="M100,-40 C99,-18 101,-2 100,38"/>
+          <path class="b" filter="url(#chalk14)" d="M101,-41 C102,-17 99,-3 101,37"/>
         </svg>
         <div class="mat"><span>Coming Soon</span></div>
       </div>
