@@ -33,6 +33,16 @@
   .nav-back{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);display:flex;align-items:center;gap:8px;}
   .nav-back:hover{color:var(--accent);}
 
+  /* Fixed vertical rails on either edge of the screen for chapter-to-chapter
+     navigation — a spine-label read, sitting beside the content rather than
+     stacked below it. Chapter 1 has no left rail (nothing comes before it),
+     chapter 5 has no right rail (nothing comes after it yet). */
+  .side-nav{position:fixed;top:50%;transform:translateY(-50%);z-index:450;writing-mode:vertical-rl;text-orientation:mixed;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim);transition:color .2s ease;}
+  .side-nav:hover{color:var(--accent);}
+  .side-nav.left{left:18px;}
+  .side-nav.right{right:18px;}
+  @media(max-width:760px){.side-nav{display:none;}}
+
   main{max-width:920px;margin:0 auto;padding:64px clamp(20px,6vw,40px) 100px;}
   /* Number + title share one line now, same treatment as the main
      photography page — no separate "Photography · Chapter N" eyebrow. */
@@ -67,11 +77,8 @@
   .gallery-frame::after{content:'';position:absolute;top:-42px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:var(--accent);opacity:.8;box-shadow:0 0 8px var(--accent);}
   .gallery-frame span{font-family:'Fraunces',serif;font-style:italic;font-size:12px;letter-spacing:.04em;color:rgba(242,237,226,.3);}
 
-  .more-note{margin-top:36px;font-size:22px;color:var(--text-dim);opacity:.5;text-align:center;}
-
-  .chapter-nav{display:flex;justify-content:space-between;align-items:center;margin-top:64px;padding-top:28px;border-top:1px solid var(--line);}
-  .chapter-nav a{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);display:flex;align-items:center;gap:8px;}
-  .chapter-nav a:hover{color:var(--accent);}
+  .more-note{margin-top:36px;font-family:'Fraunces',serif;font-style:italic;font-size:16px;color:var(--text-dim);opacity:.5;text-align:center;white-space:nowrap;}
+  @media(max-width:640px){.more-note{white-space:normal;}}
 
   footer{padding:36px clamp(20px,6vw,80px);border-top:1px solid var(--line);font-size:12px;color:var(--text-dim);text-align:center;}
 </style>
@@ -85,6 +92,8 @@
   <a class="nav-logo" href="index.html">TheXuSpace</a>
   <a class="nav-back" href="photography.html">&larr; Back to Photography</a>
 </header>
+
+<a class="side-nav left" href="collection-1.html">View Last Chapter</a><a class="side-nav right" href="collection-3.html">View Next Chapter</a>
 
 <main>
   <div class="chapter-head"><span class="chapter-num">02</span><span class="chapter-rule"></span><h1>2020, and the old photos kept me sane</h1></div>
@@ -115,11 +124,6 @@
       <div class="gallery-frame"><div class="mat"><span>Coming Soon</span></div></div>
       <div class="gallery-frame"><div class="mat"><span>Coming Soon</span></div></div>
     </div>
-  </div>
-
-  <div class="chapter-nav">
-    <a href="collection-1.html">&larr; Previous chapter</a>
-    <a href="collection-3.html">Next chapter &rarr;</a>
   </div>
 
   <p class="more-note">More from this chapter's collection is on its way &mdash; this page will grow as the story does.</p>
