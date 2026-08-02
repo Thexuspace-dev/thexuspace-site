@@ -43,6 +43,7 @@
   #chapter0 .stop-photo{width:145%;height:145%;object-position:60% 40%;}
   #chapter0 .chapter-mark .chapter-index{color:#f7f4ec;}
   #chapter0 .chapter-mark .chapter-rule{background:#f7f4ec;}
+  #chapter0 .chapter-mark .chapter-compass{color:#f7f4ec;}
   #chapter0 .chapter-mark h2{font-size:clamp(30px,5vw,52px);opacity:.85;max-width:640px;}
 
   /* Scroll cue centered under the whole hero, with a soft, slowly
@@ -114,8 +115,20 @@
   .chapter-mark{display:flex;align-items:baseline;gap:16px;margin-bottom:12px;flex-wrap:wrap;}
   .chapter-mark .chapter-index{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(22px,3vw,30px);color:var(--stop-accent, var(--accent));letter-spacing:.14em;}
   .chapter-mark .chapter-rule{width:30px;height:1px;background:var(--stop-accent, var(--accent));opacity:.7;align-self:center;}
+  /* Small compass/asterisk mark echoing the "ahead vs. roam" idea from
+     chapter 00's text — every direction is its own story. Same icon,
+     rotated to a different angle per chapter so it quietly reads as
+     "wandering" rather than a fixed, repeated decoration. */
+  .chapter-mark .chapter-compass{width:14px;height:14px;flex:none;align-self:center;color:var(--stop-accent, var(--accent));opacity:.55;}
+  #chapter0 .chapter-mark .chapter-compass{transform:rotate(0deg);}
+  #chapter1 .chapter-mark .chapter-compass{transform:rotate(35deg);}
+  #chapter2 .chapter-mark .chapter-compass{transform:rotate(110deg);}
+  #chapter3 .chapter-mark .chapter-compass{transform:rotate(200deg);}
+  #chapter4 .chapter-mark .chapter-compass{transform:rotate(260deg);}
+  #chapter5 .chapter-mark .chapter-compass{transform:rotate(310deg);}
   #chapter1 .chapter-mark .chapter-index{color:#f7f4ec;}
   #chapter1 .chapter-mark .chapter-rule{background:#f7f4ec;}
+  #chapter1 .chapter-mark .chapter-compass{color:#f7f4ec;}
   .chapter-mark h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(22px,3vw,30px);color:#f7f4ec;margin:0;}
   #chapter1 .chapter-mark h2{font-size:clamp(30px,5vw,52px);opacity:.5;max-width:760px;}
   .stop-overlay p{font-size:15px;line-height:1.7;color:#d9d3c4;max-width:min(860px,72vw);margin-top:16px;}
@@ -171,7 +184,7 @@
       <img class="stop-photo" src="1.jpg" alt="Peter Xu, RoamWithPete">
       <div class="scrim"></div>
       <div class="stop-overlay">
-        <div class="chapter-mark"><span class="chapter-index">00</span><span class="chapter-rule"></span><h2>Who is RoamWithPete?</h2></div>
+        <div class="chapter-mark"><span class="chapter-index">00</span><span class="chapter-rule"></span><svg class="chapter-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M12 2v6M12 16v6M2 12h6M16 12h6M5.6 5.6l4.2 4.2M14.2 14.2l4.2 4.2M18.4 5.6l-4.2 4.2M9.8 14.2l-4.2 4.2"/></svg><h2>Who is RoamWithPete?</h2></div>
         <p>I started this as Adventureaheadpx — just casual memories. After-school sunsets, weekend hikes, moments I wanted to share with family and friends, nothing more thought out than that.</p>
         <p>Somewhere along the way it stopped being casual. I started to actually focus in — it became a symbolic feeling I found myself wanting to share more and more, and the more I put into it, the more I felt back.</p>
         <p>That's why "ahead" became "roam." Ahead only points one direction — forward. Roaming moves through all of them, spontaneous, no fixed line. Every direction I wander into is its own story, told through my eyes.</p>
@@ -194,7 +207,7 @@
         <div class="scrim"></div>
         <div class="frame-tag">Vancouver, 2019</div>
         <div class="stop-overlay">
-          <div class="chapter-mark"><span class="chapter-index">01</span><span class="chapter-rule"></span><h2>Beginner's luck</h2></div>
+          <div class="chapter-mark"><span class="chapter-index">01</span><span class="chapter-rule"></span><svg class="chapter-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M12 2v6M12 16v6M2 12h6M16 12h6M5.6 5.6l4.2 4.2M14.2 14.2l4.2 4.2M18.4 5.6l-4.2 4.2M9.8 14.2l-4.2 4.2"/></svg><h2>Beginner's luck</h2></div>
           <p>Just another day on my trip — the seal was deep in a peaceful nap on the rocks when a tourist wandered and startled it awake. I grabbed a shot without thinking much of it, and it ended up placing in the AGORA Top 10. In the end, I can't explain why — I just liked the picture.</p>
         </div>
       </div>
@@ -213,7 +226,7 @@
         <div class="scrim"></div>
         <div class="frame-tag">Colorado, 2020</div>
         <div class="stop-overlay">
-          <div class="chapter-mark"><span class="chapter-index">02</span><span class="chapter-rule"></span><h2>2020, and the old photos kept me sane</h2></div>
+          <div class="chapter-mark"><span class="chapter-index">02</span><span class="chapter-rule"></span><svg class="chapter-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M12 2v6M12 16v6M2 12h6M16 12h6M5.6 5.6l4.2 4.2M14.2 14.2l4.2 4.2M18.4 5.6l-4.2 4.2M9.8 14.2l-4.2 4.2"/></svg><h2>2020, and the old photos kept me sane</h2></div>
           <p>Then 2020 happened — the kind of year still strange to explain out loud. Isolation set in, and it was the old photos from past trips that got me through it, going back through them again and again. Somewhere in that routine, I started to notice the tiny details — including this curious fellow here — and it turned a quiet, difficult year into the start of a habit I never really dropped.</p>
         </div>
       </div>
@@ -232,7 +245,7 @@
         <div class="scrim"></div>
         <div class="frame-tag">Idaho, 2021</div>
         <div class="stop-overlay">
-          <div class="chapter-mark"><span class="chapter-index">03</span><span class="chapter-rule"></span><h2>My obsession with cold, dark nights in the middle of nowhere</h2></div>
+          <div class="chapter-mark"><span class="chapter-index">03</span><span class="chapter-rule"></span><svg class="chapter-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M12 2v6M12 16v6M2 12h6M16 12h6M5.6 5.6l4.2 4.2M14.2 14.2l4.2 4.2M18.4 5.6l-4.2 4.2M9.8 14.2l-4.2 4.2"/></svg><h2>My obsession with cold, dark nights in the middle of nowhere</h2></div>
           <p>I'd tried to capture that mysterious dark sky before, but could never catch the one opportunity to take it all in — until this night in Idaho, far from anywhere, under a sky that felt endless. This shot exists because I didn't want to forget what that felt like, bathing in a universe that seemed to be falling all around me.</p>
         </div>
       </div>
@@ -251,7 +264,7 @@
         <div class="scrim"></div>
         <div class="frame-tag">2022 – 2025, RoamWithPete</div>
         <div class="stop-overlay">
-          <div class="chapter-mark"><span class="chapter-index">04</span><span class="chapter-rule"></span><h2>Life happens, and the eye changes with it</h2></div>
+          <div class="chapter-mark"><span class="chapter-index">04</span><span class="chapter-rule"></span><svg class="chapter-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M12 2v6M12 16v6M2 12h6M16 12h6M5.6 5.6l4.2 4.2M14.2 14.2l4.2 4.2M18.4 5.6l-4.2 4.2M9.8 14.2l-4.2 4.2"/></svg><h2>Life happens, and the eye changes with it</h2></div>
           <p>Between 2022 and 2025, the way I looked at things changed. I got more observant — drawn into existing and conceptual architecture, the logic behind a facade or a stairwell. My composition shifted with it too, more horizontal, closer to 16:9 film framing, and I started posting the work differently to match — a shift I'm still refining today.</p>
         </div>
       </div>
@@ -272,7 +285,7 @@
       <div class="scrim"></div>
       <div class="frame-tag">2026</div>
       <div class="stop-overlay">
-        <div class="chapter-mark"><span class="chapter-index">05</span><span class="chapter-rule"></span><h2>Today, still learning what my perspective is</h2></div>
+        <div class="chapter-mark"><span class="chapter-index">05</span><span class="chapter-rule"></span><svg class="chapter-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M12 2v6M12 16v6M2 12h6M16 12h6M5.6 5.6l4.2 4.2M14.2 14.2l4.2 4.2M18.4 5.6l-4.2 4.2M9.8 14.2l-4.2 4.2"/></svg><h2>Today, still learning what my perspective is</h2></div>
         <p>And today — July 30, 2026 — this is still where I am: still looking, still figuring out what my own perspective actually is. Not a neat ending, just where the story happens to be standing right now. This isn't a closed chapter. It's the one I'm still writing, one frame and one question at a time.</p>
       </div>
     </div>
