@@ -71,7 +71,7 @@
      dim, 30% opacity) sits right next to the mute/play toggle instead
      of living up in the hero on its own. */
   #musicBar{position:fixed;right:24px;bottom:24px;z-index:400;display:flex;align-items:center;gap:12px;}
-  .music-credit{font-size:11px;letter-spacing:.04em;color:var(--yellow-dim);opacity:.5;transition:opacity .25s ease;white-space:nowrap;max-width:220px;overflow:hidden;text-overflow:ellipsis;}
+  .music-credit{font-size:11px;letter-spacing:.04em;color:var(--yellow-dim);opacity:.5;transition:opacity .25s ease;white-space:nowrap;}
   .music-credit:hover{opacity:.7;}
   @media(max-width:640px){.music-credit{display:none;}}
   #musicToggle{flex:none;width:42px;height:42px;border-radius:50%;border:1px solid rgba(211,178,139,.35);background:rgba(10,8,6,.55);backdrop-filter:blur(8px);color:var(--yellow-dim);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:.8;transition:opacity .25s ease,border-color .25s ease,color .25s ease;}
