@@ -41,12 +41,11 @@
      fixed 5:4 photo placeholder on the right. */
   #chapter0 .stop-band{display:flex;align-items:center;}
   .intro-scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(100deg, rgba(10,8,4,.82) 0%, rgba(10,8,4,.6) 45%, rgba(10,8,4,.25) 100%);}
-  .intro-grid{position:relative;z-index:2;width:100%;max-width:1500px;margin:0 auto;padding:100px clamp(20px,6vw,64px) 60px;display:flex;align-items:center;gap:clamp(30px,5vw,70px);}
+  .intro-grid{position:relative;z-index:2;width:100%;max-width:1500px;margin:0 auto;padding:90px clamp(20px,6vw,64px) 90px;display:flex;align-items:center;gap:clamp(30px,5vw,70px);}
   .intro-text{flex:1 1 380px;min-width:280px;}
-  /* Photo box scaled up again (~1.4x each dimension, ~2x area) from
-     the previous pass, so it keeps growing toward being the dominant
-     element without breaking the two-column layout entirely. */
-  .intro-photo{flex:0 0 clamp(680px,58vw,1060px);aspect-ratio:5/4;position:relative;overflow:hidden;border-radius:2px;box-shadow:0 30px 80px rgba(0,0,0,.5);}
+  /* Photo sized down so the whole two-column block clears the
+     "Scroll to walk through" cue at the bottom of the frame. */
+  .intro-photo{flex:0 0 clamp(440px,40vw,720px);aspect-ratio:5/4;position:relative;overflow:hidden;border-radius:2px;box-shadow:0 30px 80px rgba(0,0,0,.5);}
   .intro-photo .stop-photo{width:100%;height:100%;object-position:50% 42%;}
   .intro-text p{font-size:17px;line-height:1.7;color:#d9d3c4;max-width:560px;margin-top:16px;}
   .intro-services{margin-top:28px;display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 16px;}
@@ -197,9 +196,9 @@
     <div class="intro-grid">
       <div class="intro-text">
         <div class="chapter-mark chapter-mark-intro"><h2 class="roam-title"><span class="rt-from">From</span><span class="rt-gap"></span><span class="rt-word">AdventureAhead</span> To <span class="rt-word">RoamwithPete</span></h2></div>
-        <p>AdventureAheadPX started as something casual — after-school sunsets, weekend hikes, moments I wanted to share with the people I love.</p>
-        <p>Somewhere along the way, casual turned into something I actually cared about. The more I put in, the more it gave back, and it became a feeling worth chasing.</p>
-        <p>That's why ahead became roam. Ahead only points one way. Roaming has no fixed line — every direction is its own story, told through my eyes.</p>
+        <p>I started this as Adventureaheadpx — just casual memories. After-school sunsets, weekend hikes, moments I wanted to share with family and friends, nothing more thought out than that.</p>
+        <p>Somewhere along the way it stopped being casual. I started to actually focus in — it became a symbolic feeling I found myself wanting to share more and more, and the more I put into it, the more I felt back.</p>
+        <p>That's why "ahead" became "roam." Ahead only points one direction — forward. Roaming moves through all of them, spontaneous, no fixed line. Every direction I wander into is its own story, told through my eyes.</p>
       </div>
       <div class="intro-photo">
         <img class="stop-photo" src="0.jpg" alt="Peter Xu looking up at Delicate Arch, Arches National Park">
