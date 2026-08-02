@@ -304,7 +304,7 @@
         Email
       </a>
     </div>
-    <a class="all-collections-link" href="collections.html">See All Collections →</a>
+    <a class="all-collections-link" href="collections.html">See All Collections</a>
   </div>
 </div>
 
@@ -403,20 +403,15 @@
     scrollTrigger: { trigger: '.closing', start: 'top 85%' }
   });
 
-  // ---- Quiet background music: real YouTube embed, kept small ----
-  // Loads the official YouTube IFrame API (this is the compliant way to
-  // play a YouTube video's audio — no ripping, no hiding the player).
-  // Starts paused; the corner button plays/pauses it. Since the track
-  // itself runs long, this only loops the ~30-minute stretch starting
-  // at 39:26 (where the linked moment begins) instead of the whole
-  // thing — once playback passes 30 minutes past that point, it jumps
-  // back to 39:26 rather than continuing into the rest of the video.
+  // ---- Quiet background music: a real, licensed audio file, no video ----
+  // Space Ambient by SolarFLEX (Pixabay Content License — free to use).
+  // Starts paused; the corner button plays/pauses it. Loops on end.
   (function(){
-    const YT_VIDEO_ID = 'caAVbyTCptw';
-    const YT_START = 2366;        // 39:26 — where the liked part starts
-    const LOOP_SECONDS = 1800;    // ~30 minutes before it loops back
     const btn = document.getElementById('musicToggle');
-    let player = null;
+    const audio = new Audio('space-ambient.mp3');
+    audio.loop = true;
+    audio.preload = 'none';
+    audio.volume = 0.55;
 
     function setPlayingUI(isPlaying){
       btn.classList.toggle('playing', isPlaying);
@@ -424,35 +419,10 @@
       btn.title = isPlaying ? 'Pause background music' : 'Play background music';
     }
 
-    const tag = document.createElement('script');
-    tag.src = 'https://www.youtube.com/iframe_api';
-    document.head.appendChild(tag);
-
-    window.onYouTubeIframeAPIReady = function(){
-      player = new YT.Player('ytPlayer', {
-        videoId: YT_VIDEO_ID,
-        playerVars: { start: YT_START, controls: 1, modestbranding: 1, rel: 0, playsinline: 1 },
-        events: {
-          onStateChange: (e) => {
-            if(e.data === YT.PlayerState.PLAYING) setPlayingUI(true);
-            else if(e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.ENDED) setPlayingUI(false);
-          }
-        }
-      });
-    };
-
-    // Loop the chosen 30-minute stretch instead of the full video.
-    setInterval(() => {
-      if(!player || !player.getCurrentTime) return;
-      const t = player.getCurrentTime();
-      if(t - YT_START >= LOOP_SECONDS) player.seekTo(YT_START, true);
-    }, 5000);
-
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
-      if(!player || !player.getPlayerState) return;
-      if(player.getPlayerState() === YT.PlayerState.PLAYING) player.pauseVideo();
-      else player.playVideo();
+      if(audio.paused){ audio.play(); setPlayingUI(true); }
+      else { audio.pause(); setPlayingUI(false); }
     });
   })();
 </script>
