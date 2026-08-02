@@ -69,10 +69,10 @@
      dim, 30% opacity) sits right next to the mute/play toggle instead
      of living up in the hero on its own. */
   #musicBar{position:fixed;right:24px;bottom:24px;z-index:400;display:flex;align-items:center;gap:12px;}
-  .music-credit{font-size:11px;letter-spacing:.04em;color:var(--yellow-dim);opacity:.3;transition:opacity .25s ease;white-space:nowrap;max-width:220px;overflow:hidden;text-overflow:ellipsis;}
+  .music-credit{font-size:11px;letter-spacing:.04em;color:var(--yellow-dim);opacity:.5;transition:opacity .25s ease;white-space:nowrap;max-width:220px;overflow:hidden;text-overflow:ellipsis;}
   .music-credit:hover{opacity:.7;}
   @media(max-width:640px){.music-credit{display:none;}}
-  #musicToggle{flex:none;width:42px;height:42px;border-radius:50%;border:1px solid rgba(211,178,139,.35);background:rgba(10,8,6,.55);backdrop-filter:blur(8px);color:var(--yellow-dim);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:.6;transition:opacity .25s ease,border-color .25s ease,color .25s ease;}
+  #musicToggle{flex:none;width:42px;height:42px;border-radius:50%;border:1px solid rgba(211,178,139,.35);background:rgba(10,8,6,.55);backdrop-filter:blur(8px);color:var(--yellow-dim);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:.8;transition:opacity .25s ease,border-color .25s ease,color .25s ease;}
   #musicToggle:hover{opacity:1;border-color:var(--accent);color:var(--accent);}
   #musicToggle svg{width:17px;height:17px;}
   #musicToggle .bars{display:flex;align-items:flex-end;gap:2px;height:14px;}
@@ -424,12 +424,16 @@
 
   // ---- Quiet background music: a real, licensed audio file, no video ----
   // Space Ambient by SolarFLEX (Pixabay Content License — free to use).
-  // Starts paused; the corner button plays/pauses it. Loops on end.
+  // Tries to autoplay as soon as you land on the page. Browsers block
+  // unmuted autoplay until they've seen some user activity, so if the
+  // immediate attempt is rejected, it quietly retries on the very first
+  // scroll/click/keypress instead — still "auto" in the sense that it
+  // starts itself, no need to hunt for the button.
   (function(){
     const btn = document.getElementById('musicToggle');
     const audio = new Audio('space-ambient.mp3');
     audio.loop = true;
-    audio.preload = 'none';
+    audio.preload = 'auto';
     audio.volume = 0.55;
 
     function setPlayingUI(isPlaying){
@@ -437,6 +441,17 @@
       btn.setAttribute('aria-pressed', isPlaying ? 'true' : 'false');
       btn.title = isPlaying ? 'Pause background music' : 'Play background music';
     }
+
+    function tryAutoplay(){
+      audio.play().then(() => setPlayingUI(true)).catch(() => {
+        const startOnGesture = () => {
+          audio.play().then(() => setPlayingUI(true)).catch(() => {});
+          ['scroll','click','keydown','touchstart'].forEach(ev => document.removeEventListener(ev, startOnGesture));
+        };
+        ['scroll','click','keydown','touchstart'].forEach(ev => document.addEventListener(ev, startOnGesture, { once: true, passive: true }));
+      });
+    }
+    tryAutoplay();
 
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
