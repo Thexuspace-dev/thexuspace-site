@@ -80,6 +80,13 @@
   #musicToggle .bars span:nth-child(3){height:7px;animation-delay:.3s;}
   @keyframes musicBar{0%,100%{transform:scaleY(.4);}50%{transform:scaleY(1);}}
 
+  /* Small, genuinely visible YouTube embed — this is what keeps it
+     within YouTube's rules (a hidden/stripped-audio-only embed isn't
+     allowed). Kept tiny and tucked in the corner so it reads as a
+     player, not a video. */
+  .yt-mini{flex:none;width:100px;height:56px;border-radius:6px;overflow:hidden;border:1px solid rgba(211,178,139,.35);box-shadow:0 8px 22px rgba(0,0,0,.45);background:#000;}
+  .yt-mini iframe{width:100%;height:100%;display:block;}
+
   /* Each chapter: a true depth-of-field effect. The same photo sits behind
      itself — zoomed in much larger and heavily blurred, like an out-of-focus
      background — while the actual photo stays perfectly sharp inside its
@@ -302,15 +309,15 @@
   </div>
 </div>
 
-<!-- Quiet background music while scrolling. Browsers block audio with
-     sound until the visitor interacts with the page, so this starts
-     muted/off and turns on with the first scroll or click, faded in
-     softly rather than starting at full volume. Swap roam-theme.mp3 for
-     whatever royalty-free track ends up chosen. Credit lives right next
-     to the toggle instead of up in the hero. -->
-<audio id="bgMusic" src="roam-theme.mp3" loop preload="none"></audio>
+<!-- Quiet background music while scrolling — a real, visible (if tiny)
+     YouTube embed of the track you picked, not a stripped/hidden audio
+     rip (YouTube's terms don't allow that; a small visible player is
+     the compliant way to do this). Starts paused; the toggle button
+     plays/pauses it. Loops the ~30-minute stretch you linked
+     (39:26 onward) rather than the full, much longer video. -->
 <div id="musicBar">
-  <a class="music-credit" href="https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100235" target="_blank" rel="noopener">Music: "Evening Fall (Piano)" — Kevin MacLeod</a>
+  <div id="ytPlayer" class="yt-mini"></div>
+  <a class="music-credit" href="https://www.youtube.com/watch?v=caAVbyTCptw&amp;t=2366s" target="_blank" rel="noopener">Music: Calm — Serene Meditative Music, via YouTube</a>
   <button id="musicToggle" title="Play background music" aria-pressed="false">
     <div class="bars"><span></span><span></span><span></span></div>
   </button>
@@ -397,59 +404,56 @@
     scrollTrigger: { trigger: '.closing', start: 'top 85%' }
   });
 
-  // ---- Quiet background music ----
-  // Starts off. On the visitor's first scroll or click anywhere on the
-  // page, it fades in softly to a low volume and loops from there. The
-  // corner button toggles it on/off at any point after that; the little
-  // bars only animate while it's actually playing.
+  // ---- Quiet background music: real YouTube embed, kept small ----
+  // Loads the official YouTube IFrame API (this is the compliant way to
+  // play a YouTube video's audio — no ripping, no hiding the player).
+  // Starts paused; the corner button plays/pauses it. Since the track
+  // itself runs long, this only loops the ~30-minute stretch starting
+  // at 39:26 (where the linked moment begins) instead of the whole
+  // thing — once playback passes 30 minutes past that point, it jumps
+  // back to 39:26 rather than continuing into the rest of the video.
   (function(){
-    const audio = document.getElementById('bgMusic');
+    const YT_VIDEO_ID = 'caAVbyTCptw';
+    const YT_START = 2366;        // 39:26 — where the liked part starts
+    const LOOP_SECONDS = 1800;    // ~30 minutes before it loops back
     const btn = document.getElementById('musicToggle');
-    const TARGET_VOLUME = 0.35;
-    let started = false;
-
-    function fadeIn(){
-      audio.volume = 0;
-      audio.play().catch(() => {});
-      let v = 0;
-      const step = setInterval(() => {
-        v = Math.min(TARGET_VOLUME, v + 0.02);
-        audio.volume = v;
-        if(v >= TARGET_VOLUME) clearInterval(step);
-      }, 60);
-    }
+    let player = null;
 
     function setPlayingUI(isPlaying){
       btn.classList.toggle('playing', isPlaying);
       btn.setAttribute('aria-pressed', isPlaying ? 'true' : 'false');
-      btn.title = isPlaying ? 'Mute background music' : 'Play background music';
+      btn.title = isPlaying ? 'Pause background music' : 'Play background music';
     }
 
-    // If the track file isn't there yet (roam-theme.mp3 not uploaded),
-    // fail quietly instead of showing "playing" bars with no sound.
-    audio.addEventListener('error', () => setPlayingUI(false));
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
 
-    function startOnFirstInteraction(){
-      if(started) return;
-      started = true;
-      fadeIn();
-      setPlayingUI(true);
-      window.removeEventListener('scroll', startOnFirstInteraction);
-      window.removeEventListener('click', startOnFirstInteraction);
-    }
-    window.addEventListener('scroll', startOnFirstInteraction, { once: true, passive: true });
-    window.addEventListener('click', startOnFirstInteraction, { once: true });
+    window.onYouTubeIframeAPIReady = function(){
+      player = new YT.Player('ytPlayer', {
+        videoId: YT_VIDEO_ID,
+        playerVars: { start: YT_START, controls: 1, modestbranding: 1, rel: 0, playsinline: 1 },
+        events: {
+          onStateChange: (e) => {
+            if(e.data === YT.PlayerState.PLAYING) setPlayingUI(true);
+            else if(e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.ENDED) setPlayingUI(false);
+          }
+        }
+      });
+    };
+
+    // Loop the chosen 30-minute stretch instead of the full video.
+    setInterval(() => {
+      if(!player || !player.getCurrentTime) return;
+      const t = player.getCurrentTime();
+      if(t - YT_START >= LOOP_SECONDS) player.seekTo(YT_START, true);
+    }, 5000);
 
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
-      if(!started){ startOnFirstInteraction(); return; }
-      if(audio.paused){
-        fadeIn();
-        setPlayingUI(true);
-      } else {
-        audio.pause();
-        setPlayingUI(false);
-      }
+      if(!player || !player.getPlayerState) return;
+      if(player.getPlayerState() === YT.PlayerState.PLAYING) player.pauseVideo();
+      else player.playVideo();
     });
   })();
 </script>
