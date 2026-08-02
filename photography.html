@@ -152,15 +152,15 @@
   .collection-btn .collection-label{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#e4ded1;text-align:center;max-width:60px;line-height:1.4;}
   @media(max-width:700px){.collection-btn{display:none;}}
 
-  /* Closing — now its own bounded frame, just like chapter 00's photo
-     box, instead of a full-bleed backdrop sitting behind the text. A
-     fixed 3:1 letterboxed strip of 15 thin horizontal bands (cycling
-     the 5 chapter photos), sitting above the quote as this "last page"
-     own framed image. Footer shares the exact same dark background so
-     the whole bottom of the page still reads as one continuous color. */
-  .closing{position:relative;padding:120px clamp(20px,6vw,80px) 100px;text-align:center;overflow:hidden;background:#141019;scroll-snap-align:start;}
-  .closing-frame{position:relative;z-index:2;width:100%;max-width:900px;aspect-ratio:3/1;margin:0 auto 46px;overflow:hidden;border-radius:2px;box-shadow:0 30px 80px rgba(0,0,0,.5);display:flex;flex-direction:column;}
-  .closing-frame div{flex:1 1 auto;width:100%;background-size:cover;background-position:center;filter:grayscale(.1) brightness(.85);}
+  /* Closing — back to a full-bleed frame that fills the whole section,
+     just like chapters 1-5: the photo strips are the entire background,
+     text sits on top of them (not off to the side in its own box). Full
+     100vh height and flex-centered content, matching every other
+     chapter's frame instead of a padding-sized block. */
+  .closing{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:0 clamp(20px,6vw,80px);text-align:center;overflow:hidden;background:#141019;scroll-snap-align:start;}
+  .closing-mosaic{position:absolute;inset:0;display:flex;flex-direction:column;z-index:0;}
+  .closing-mosaic div{flex:1 1 auto;width:100%;background-size:cover;background-position:center;filter:grayscale(.1) brightness(.85);}
+  .closing-scrim{position:absolute;inset:0;background:linear-gradient(180deg, rgba(12,9,15,.35) 0%, rgba(12,9,15,.68) 100%);z-index:1;}
   .closing-inner{position:relative;z-index:2;max-width:640px;margin:0 auto;}
   .closing blockquote{font-family:'Fraunces',serif;font-style:italic;font-size:clamp(20px,3vw,28px);line-height:1.5;color:#f7f4ec;opacity:0;transform:translateY(20px);}
   .closing cite{display:block;margin-top:18px;font-family:'Inter',sans-serif;font-style:normal;font-size:13px;color:#c9c2b4;}
@@ -318,7 +318,8 @@
 </section>
 
 <div class="closing">
-  <div class="closing-frame" id="closingMosaic"></div>
+  <div class="closing-mosaic" id="closingMosaic"></div>
+  <div class="closing-scrim"></div>
   <div class="closing-inner">
     <blockquote>
       "Photography and design turned out to be the same eye, pointed in two directions."
@@ -400,11 +401,11 @@
     frame.addEventListener('dragstart', e => e.preventDefault());
   });
 
-  // ---- Build the closing frame (15 thin horizontal strips, cycling the 5 chapter photos) ----
+  // ---- Build the closing frame (5 full-bleed strips, cycling the 5 chapter photos) ----
   const mosaic = document.getElementById('closingMosaic');
   if(mosaic){
     const photos = ['1.jpg','2.jpg','3.jpg','4.jpg','5.jpg'];
-    for(let i=0;i<15;i++){
+    for(let i=0;i<5;i++){
       const tile = document.createElement('div');
       tile.style.backgroundImage = `url('${photos[i % photos.length]}')`;
       mosaic.appendChild(tile);
