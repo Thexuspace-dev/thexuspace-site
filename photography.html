@@ -41,14 +41,16 @@
      fixed 5:4 photo placeholder on the right. */
   #chapter0 .stop-band{display:flex;align-items:center;}
   .intro-scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(100deg, rgba(10,8,4,.82) 0%, rgba(10,8,4,.6) 45%, rgba(10,8,4,.25) 100%);}
-  .intro-grid{position:relative;z-index:2;width:100%;max-width:1500px;margin:0 auto;padding:130px clamp(20px,6vw,64px) 90px;display:flex;align-items:center;gap:clamp(30px,5vw,70px);}
+  .intro-grid{position:relative;z-index:2;width:100%;max-width:1500px;margin:0 auto;padding:100px clamp(20px,6vw,64px) 60px;display:flex;align-items:center;justify-content:space-between;gap:clamp(30px,5vw,70px);}
   .intro-text{flex:1 1 380px;min-width:280px;}
   /* Photo box scaled up again (~1.4x each dimension, ~2x area) from
      the previous pass, so it keeps growing toward being the dominant
-     element without breaking the two-column layout entirely. */
-  .intro-photo{flex:0 0 clamp(680px,58vw,1060px);aspect-ratio:5/4;position:relative;overflow:hidden;border-radius:2px;box-shadow:0 30px 80px rgba(0,0,0,.5);}
+     element without breaking the two-column layout entirely. Pushed to
+     the far-right edge of the frame via justify-content:space-between
+     on the parent grid. */
+  .intro-photo{flex:0 0 clamp(680px,58vw,1060px);aspect-ratio:5/4;position:relative;overflow:hidden;border-radius:2px;box-shadow:0 30px 80px rgba(0,0,0,.5);margin-left:auto;}
   .intro-photo .stop-photo{width:100%;height:100%;object-position:50% 42%;}
-  .intro-text p{font-size:15px;line-height:1.7;color:#d9d3c4;max-width:560px;margin-top:16px;}
+  .intro-text p{font-size:17px;line-height:1.7;color:#d9d3c4;max-width:560px;margin-top:16px;}
   .intro-services{margin-top:28px;display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 16px;}
   .intro-services .services-label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--yellow-dim);opacity:.6;flex:none;}
   .intro-services .services-list{display:flex;flex-wrap:wrap;gap:8px 16px;}
@@ -197,15 +199,9 @@
     <div class="intro-grid">
       <div class="intro-text">
         <div class="chapter-mark chapter-mark-intro"><h2 class="roam-title"><span class="rt-from">From</span><span class="rt-gap"></span><span class="rt-word">AdventureAhead</span> To <span class="rt-word">RoamwithPete</span></h2></div>
-        <p>I started this as Adventureaheadpx — just casual memories. After-school sunsets, weekend hikes, moments I wanted to share with family and friends, nothing more thought out than that.</p>
-        <p>Somewhere along the way it stopped being casual. I started to actually focus in — it became a symbolic feeling I found myself wanting to share more and more, and the more I put into it, the more I felt back.</p>
-        <p>That's why "ahead" became "roam." Ahead only points one direction — forward. Roaming moves through all of them, spontaneous, no fixed line. Every direction I wander into is its own story, told through my eyes.</p>
-        <div class="intro-services">
-          <span class="services-label">Services</span>
-          <div class="services-list">
-            <span>Landscape</span><span>Portrait</span><span>Wildlife</span><span>Astro</span><span>Architecture</span>
-          </div>
-        </div>
+        <p>AdventureAheadPX started as something casual — after-school sunsets, weekend hikes, moments I wanted to share with the people I love.</p>
+        <p>Somewhere along the way, casual turned into something I actually cared about. The more I put in, the more it gave back, and it became a feeling worth chasing.</p>
+        <p>That's why ahead became roam. Ahead only points one way. Roaming has no fixed line — every direction is its own story, told through my eyes.</p>
       </div>
       <div class="intro-photo">
         <img class="stop-photo" src="0.jpg" alt="Peter Xu looking up at Delicate Arch, Arches National Park">
@@ -228,7 +224,7 @@
         <div class="scrim"></div>
         <div class="frame-tag">Vancouver, 2019</div>
         <div class="stop-overlay">
-          <div class="chapter-mark"><span class="chapter-index">01</span><span class="chapter-rule"></span><svg class="chapter-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M12 2v6M12 16v6M2 12h6M16 12h6M5.6 5.6l4.2 4.2M14.2 14.2l4.2 4.2M18.4 5.6l-4.2 4.2M9.8 14.2l-4.2 4.2"/></svg><h2>Beginner's luck</h2></div>
+          <div class="chapter-mark"><span class="chapter-index">01</span><h2>Beginner's luck</h2></div>
           <p>Just another day on my trip — the seal was deep in a peaceful nap on the rocks when a tourist wandered and startled it awake. I grabbed a shot without thinking much of it, and it ended up placing in the AGORA Top 10. In the end, I can't explain why — I just liked the picture.</p>
         </div>
       </div>
@@ -247,7 +243,7 @@
         <div class="scrim"></div>
         <div class="frame-tag">Boston, aka Home, 2020</div>
         <div class="stop-overlay">
-          <div class="chapter-mark"><span class="chapter-index">02</span><span class="chapter-rule"></span><svg class="chapter-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M12 2v6M12 16v6M2 12h6M16 12h6M5.6 5.6l4.2 4.2M14.2 14.2l4.2 4.2M18.4 5.6l-4.2 4.2M9.8 14.2l-4.2 4.2"/></svg><h2>2020, and the old photos kept me sane</h2></div>
+          <div class="chapter-mark"><span class="chapter-index">02</span><h2>2020, and the old photos kept me sane</h2></div>
           <p>Then 2020 happened — the kind of year still strange to explain out loud. Isolation set in, and it was the old photos from past trips that got me through it, going back through them again and again. Somewhere in that routine, I started to notice the tiny details, and it turned a quiet, difficult year into the start of a habit I never really dropped.</p>
         </div>
       </div>
@@ -266,7 +262,7 @@
         <div class="scrim"></div>
         <div class="frame-tag">Idaho, 2021</div>
         <div class="stop-overlay">
-          <div class="chapter-mark"><span class="chapter-index">03</span><span class="chapter-rule"></span><svg class="chapter-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M12 2v6M12 16v6M2 12h6M16 12h6M5.6 5.6l4.2 4.2M14.2 14.2l4.2 4.2M18.4 5.6l-4.2 4.2M9.8 14.2l-4.2 4.2"/></svg><h2>My obsession with cold, dark nights in the middle of nowhere</h2></div>
+          <div class="chapter-mark"><span class="chapter-index">03</span><h2>My obsession with cold, dark nights in the middle of nowhere</h2></div>
           <p>I'd tried to capture that mysterious dark sky before, but could never catch the one opportunity to take it all in — until this night in Idaho, far from anywhere, under a sky that felt endless. This shot exists because I didn't want to forget what that felt like, bathing in a universe that seemed to be falling all around me.</p>
         </div>
       </div>
@@ -285,7 +281,7 @@
         <div class="scrim"></div>
         <div class="frame-tag">2022 – 2025, RoamWithPete</div>
         <div class="stop-overlay">
-          <div class="chapter-mark"><span class="chapter-index">04</span><span class="chapter-rule"></span><svg class="chapter-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M12 2v6M12 16v6M2 12h6M16 12h6M5.6 5.6l4.2 4.2M14.2 14.2l4.2 4.2M18.4 5.6l-4.2 4.2M9.8 14.2l-4.2 4.2"/></svg><h2>Life happens, and the eye changes with it</h2></div>
+          <div class="chapter-mark"><span class="chapter-index">04</span><h2>Life happens, and the eye changes with it</h2></div>
           <p>Between 2022 and 2025, the way I looked at things changed. I got more observant — drawn into existing and conceptual architecture, the logic behind a facade or a stairwell. My composition shifted with it too, more horizontal, closer to 16:9 film framing, and I started posting the work differently to match — a shift I'm still refining today.</p>
         </div>
       </div>
@@ -306,7 +302,7 @@
       <div class="scrim"></div>
       <div class="frame-tag">2026</div>
       <div class="stop-overlay">
-        <div class="chapter-mark"><span class="chapter-index">05</span><span class="chapter-rule"></span><svg class="chapter-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M12 2v6M12 16v6M2 12h6M16 12h6M5.6 5.6l4.2 4.2M14.2 14.2l4.2 4.2M18.4 5.6l-4.2 4.2M9.8 14.2l-4.2 4.2"/></svg><h2>Today, still learning what my perspective is</h2></div>
+        <div class="chapter-mark"><span class="chapter-index">05</span><h2>Today, still learning what my perspective is</h2></div>
         <p>And today — July 30, 2026 — this is still where I am: still looking, still figuring out what my own perspective actually is. Not a neat ending, just where the story happens to be standing right now. This isn't a closed chapter. It's the one I'm still writing, one frame and one question at a time.</p>
       </div>
     </div>
@@ -401,11 +397,11 @@
     frame.addEventListener('dragstart', e => e.preventDefault());
   });
 
-  // ---- Build the closing frame (5 full-bleed strips, cycling the 5 chapter photos) ----
+  // ---- Build the closing frame (8 full-bleed strips, cycling the 5 chapter photos) ----
   const mosaic = document.getElementById('closingMosaic');
   if(mosaic){
     const photos = ['1.jpg','2.jpg','3.jpg','4.jpg','5.jpg'];
-    for(let i=0;i<5;i++){
+    for(let i=0;i<8;i++){
       const tile = document.createElement('div');
       tile.style.backgroundImage = `url('${photos[i % photos.length]}')`;
       mosaic.appendChild(tile);
