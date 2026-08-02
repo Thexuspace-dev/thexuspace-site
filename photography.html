@@ -394,11 +394,11 @@
     frame.addEventListener('dragstart', e => e.preventDefault());
   });
 
-  // ---- Build the closing frame (8 full-bleed strips, cycling the 5 chapter photos) ----
+  // ---- Build the closing frame (4 full-bleed strips, cycling the 5 chapter photos) ----
   const mosaic = document.getElementById('closingMosaic');
   if(mosaic){
     const photos = ['1.jpg','2.jpg','3.jpg','4.jpg','5.jpg'];
-    for(let i=0;i<8;i++){
+    for(let i=0;i<4;i++){
       const tile = document.createElement('div');
       tile.style.backgroundImage = `url('${photos[i % photos.length]}')`;
       mosaic.appendChild(tile);
