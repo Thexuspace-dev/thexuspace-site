@@ -34,17 +34,29 @@
   .nav-links a:hover,.nav-links a.current{color:var(--accent);}
   .btn{display:inline-flex;padding:10px 20px;border-radius:2px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
 
-  /* "Who is RoamWithPete?" is now its own full chapter slide — chapter
-     zero — built with the exact same stop/photo-frame/chapter-mark
-     pattern as chapters 1-5, so it reads as part of the same walk
-     instead of a bolted-on About block up top. Reuses 1.jpg but zoomed
-     and cropped differently than chapter 1's version so the two frames
-     don't look identical back-to-back. */
-  #chapter0 .stop-photo{width:145%;height:145%;object-position:60% 40%;}
+  /* "Who is RoamWithPete?" is chapter zero — still part of the same
+     walk (same dark blurred backdrop, same chapter-mark styling), but
+     laid out as its own two-column split instead of the single
+     centered photo-frame chapters 1-5 use: statement on the left, a
+     fixed 5:4 photo placeholder on the right. */
+  #chapter0 .stop-band{display:flex;align-items:center;}
+  .intro-scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(100deg, rgba(10,8,4,.82) 0%, rgba(10,8,4,.6) 45%, rgba(10,8,4,.25) 100%);}
+  .intro-grid{position:relative;z-index:2;width:100%;max-width:1180px;margin:0 auto;padding:130px clamp(20px,6vw,64px) 90px;display:flex;align-items:center;gap:clamp(30px,5vw,70px);}
+  .intro-text{flex:1 1 440px;min-width:280px;}
+  .intro-photo{flex:0 0 clamp(220px,30vw,360px);aspect-ratio:5/4;position:relative;overflow:hidden;border-radius:2px;box-shadow:0 30px 80px rgba(0,0,0,.5);}
+  .intro-photo .stop-photo{width:145%;height:145%;object-position:60% 40%;}
+  .intro-services{margin-top:28px;display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 16px;}
+  .intro-services .services-label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--yellow-dim);opacity:.6;flex:none;}
+  .intro-services .services-list{display:flex;flex-wrap:wrap;gap:8px 16px;}
+  .intro-services .services-list span{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#f7f4ec;opacity:.8;padding-bottom:3px;border-bottom:1px solid rgba(247,244,236,.28);}
+  @media(max-width:820px){
+    .intro-grid{flex-direction:column;padding-top:110px;padding-bottom:50px;}
+    .intro-photo{width:100%;max-width:280px;flex:none;}
+  }
   #chapter0 .chapter-mark .chapter-index{color:#f7f4ec;}
   #chapter0 .chapter-mark .chapter-rule{background:#f7f4ec;}
   #chapter0 .chapter-mark .chapter-compass{color:#f7f4ec;}
-  #chapter0 .chapter-mark h2{font-size:clamp(30px,5vw,52px);opacity:.85;max-width:640px;}
+  #chapter0 .chapter-mark h2{font-size:clamp(28px,4.4vw,46px);opacity:.92;max-width:520px;}
 
   /* Scroll cue centered under the whole hero, with a soft, slowly
      bouncing arrow instead of a plain "↓" character. */
@@ -93,7 +105,7 @@
      fetchable via dev tools by anyone determined. (Watermark removed
      per feedback — this is deterrent-only now, no visible mark.) */
   #chapter1 .stop-photo{object-position:50% 50%;}
-  #chapter2 .stop-photo{width:132%;height:132%;object-position:50% 49%;}
+  #chapter2 .stop-photo{object-position:50% 40%;}
   #chapter3 .stop-photo{object-position:50% 50%;}
   #chapter4 .stop-photo{object-position:50% 50%;}
   #chapter5 .stop-photo{object-position:50% 50%;}
@@ -173,14 +185,22 @@
 <section class="stop" id="chapter0" data-img="1.jpg">
   <div class="stop-band">
     <img class="stop-bg" src="1.jpg" alt="" aria-hidden="true">
-    <div class="photo-frame">
-      <img class="stop-photo" src="1.jpg" alt="Peter Xu, RoamWithPete">
-      <div class="scrim"></div>
-      <div class="stop-overlay">
+    <div class="intro-scrim"></div>
+    <div class="intro-grid">
+      <div class="intro-text">
         <div class="chapter-mark"><span class="chapter-index">00</span><span class="chapter-rule"></span><svg class="chapter-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M12 2v6M12 16v6M2 12h6M16 12h6M5.6 5.6l4.2 4.2M14.2 14.2l4.2 4.2M18.4 5.6l-4.2 4.2M9.8 14.2l-4.2 4.2"/></svg><h2>Who is RoamWithPete?</h2></div>
         <p>I started this as Adventureaheadpx — just casual memories. After-school sunsets, weekend hikes, moments I wanted to share with family and friends, nothing more thought out than that.</p>
         <p>Somewhere along the way it stopped being casual. I started to actually focus in — it became a symbolic feeling I found myself wanting to share more and more, and the more I put into it, the more I felt back.</p>
         <p>That's why "ahead" became "roam." Ahead only points one direction — forward. Roaming moves through all of them, spontaneous, no fixed line. Every direction I wander into is its own story, told through my eyes.</p>
+        <div class="intro-services">
+          <span class="services-label">Services</span>
+          <div class="services-list">
+            <span>Landscape</span><span>Portrait</span><span>Wildlife</span><span>Astro</span><span>Architecture</span>
+          </div>
+        </div>
+      </div>
+      <div class="intro-photo">
+        <img class="stop-photo" src="1.jpg" alt="Peter Xu, RoamWithPete">
       </div>
     </div>
   </div>
@@ -215,12 +235,12 @@
     <div class="stop-band">
       <img class="stop-bg" src="2.jpg" alt="" aria-hidden="true">
       <div class="photo-frame">
-        <img class="stop-photo" src="2.jpg" alt="Ground squirrel portrait">
+        <img class="stop-photo" src="2.jpg" alt="Sunset over the water with a plane overhead">
         <div class="scrim"></div>
         <div class="frame-tag">Colorado, 2020</div>
         <div class="stop-overlay">
           <div class="chapter-mark"><span class="chapter-index">02</span><span class="chapter-rule"></span><svg class="chapter-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M12 2v6M12 16v6M2 12h6M16 12h6M5.6 5.6l4.2 4.2M14.2 14.2l4.2 4.2M18.4 5.6l-4.2 4.2M9.8 14.2l-4.2 4.2"/></svg><h2>2020, and the old photos kept me sane</h2></div>
-          <p>Then 2020 happened — the kind of year still strange to explain out loud. Isolation set in, and it was the old photos from past trips that got me through it, going back through them again and again. Somewhere in that routine, I started to notice the tiny details — including this curious fellow here — and it turned a quiet, difficult year into the start of a habit I never really dropped.</p>
+          <p>Then 2020 happened — the kind of year still strange to explain out loud. Isolation set in, and it was the old photos from past trips that got me through it, going back through them again and again. Somewhere in that routine, I started to notice the tiny details, and it turned a quiet, difficult year into the start of a habit I never really dropped.</p>
         </div>
       </div>
     </div>
@@ -368,7 +388,7 @@
   // in case any other layer ever ends up interactive. None of this
   // stops determined users with dev tools — it stops casual right-click
   // saving. (No visible watermark — removed per feedback.)
-  document.querySelectorAll('.photo-frame').forEach(frame => {
+  document.querySelectorAll('.photo-frame, .intro-photo').forEach(frame => {
     frame.addEventListener('contextmenu', e => e.preventDefault());
     frame.addEventListener('dragstart', e => e.preventDefault());
   });
