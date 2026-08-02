@@ -71,13 +71,6 @@
   #musicToggle .bars span:nth-child(3){height:7px;animation-delay:.3s;}
   @keyframes musicBar{0%,100%{transform:scaleY(.4);}50%{transform:scaleY(1);}}
 
-  /* Small, genuinely visible YouTube embed — this is what keeps it
-     within YouTube's rules (a hidden/stripped-audio-only embed isn't
-     allowed). Kept tiny and tucked in the corner so it reads as a
-     player, not a video. */
-  .yt-mini{flex:none;width:100px;height:56px;border-radius:6px;overflow:hidden;border:1px solid rgba(211,178,139,.35);box-shadow:0 8px 22px rgba(0,0,0,.45);background:#000;}
-  .yt-mini iframe{width:100%;height:100%;display:block;}
-
   /* Each chapter: a true depth-of-field effect. The same photo sits behind
      itself — zoomed in much larger and heavily blurred, like an out-of-focus
      background — while the actual photo stays perfectly sharp inside its
@@ -318,15 +311,11 @@
   </div>
 </div>
 
-<!-- Quiet background music while scrolling — a real, visible (if tiny)
-     YouTube embed of the track you picked, not a stripped/hidden audio
-     rip (YouTube's terms don't allow that; a small visible player is
-     the compliant way to do this). Starts paused; the toggle button
-     plays/pauses it. Loops the ~30-minute stretch you linked
-     (39:26 onward) rather than the full, much longer video. -->
+<!-- Quiet background music while scrolling — a real, licensed audio
+     file (no video, no player chrome). Starts paused; the toggle
+     button plays/pauses it. -->
 <div id="musicBar">
-  <div id="ytPlayer" class="yt-mini"></div>
-  <a class="music-credit" href="https://www.youtube.com/watch?v=caAVbyTCptw&amp;t=2366s" target="_blank" rel="noopener">Music: Calm — Serene Meditative Music, via YouTube</a>
+  <a class="music-credit" href="https://pixabay.com/music/ambient-space-ambient-569588/" target="_blank" rel="noopener">Music: Space Ambient by SolarFLEX, via Pixabay</a>
   <button id="musicToggle" title="Play background music" aria-pressed="false">
     <div class="bars"><span></span><span></span><span></span></div>
   </button>
