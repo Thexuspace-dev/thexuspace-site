@@ -237,7 +237,7 @@
       <div class="photo-frame">
         <img class="stop-photo" src="2.jpg" alt="Sunset over the water with a plane overhead">
         <div class="scrim"></div>
-        <div class="frame-tag">Colorado, 2020</div>
+        <div class="frame-tag">Boston, aka Home, 2020</div>
         <div class="stop-overlay">
           <div class="chapter-mark"><span class="chapter-index">02</span><span class="chapter-rule"></span><svg class="chapter-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M12 2v6M12 16v6M2 12h6M16 12h6M5.6 5.6l4.2 4.2M14.2 14.2l4.2 4.2M18.4 5.6l-4.2 4.2M9.8 14.2l-4.2 4.2"/></svg><h2>2020, and the old photos kept me sane</h2></div>
           <p>Then 2020 happened — the kind of year still strange to explain out loud. Isolation set in, and it was the old photos from past trips that got me through it, going back through them again and again. Somewhere in that routine, I started to notice the tiny details, and it turned a quiet, difficult year into the start of a habit I never really dropped.</p>
@@ -393,11 +393,11 @@
     frame.addEventListener('dragstart', e => e.preventDefault());
   });
 
-  // ---- Build the closing mosaic (12 thin horizontal strips, cycling the 5 chapter photos) ----
+  // ---- Build the closing mosaic (7 thin horizontal strips, cycling the 5 chapter photos) ----
   const mosaic = document.getElementById('closingMosaic');
   if(mosaic){
     const photos = ['1.jpg','2.jpg','3.jpg','4.jpg','5.jpg'];
-    for(let i=0;i<12;i++){
+    for(let i=0;i<7;i++){
       const tile = document.createElement('div');
       tile.style.backgroundImage = `url('${photos[i % photos.length]}')`;
       mosaic.appendChild(tile);
