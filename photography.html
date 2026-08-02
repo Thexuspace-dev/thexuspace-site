@@ -172,22 +172,11 @@
   .social-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:2px;border:1px solid rgba(247,244,236,.35);color:#f7f4ec;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;transition:all .2s ease;}
   .social-btn:hover{border-color:var(--accent);color:var(--accent);}
   .social-btn svg{width:15px;height:15px;flex:none;}
-
-  footer{min-height:40vh;display:flex;align-items:center;justify-content:center;padding:40px clamp(20px,6vw,80px);border-top:none;background:#141019;font-size:13px;line-height:1.8;color:#c9c2b4;text-align:center;scroll-snap-align:start;}
-  footer p{max-width:520px;margin:0 auto;}
-  footer .welcome{font-family:'Fraunces',serif;font-style:italic;font-size:15px;color:#f7f4ec;opacity:.8;}
+  .closing-copyright{margin-top:34px;font-size:12px;line-height:1.7;color:#c9c2b4;opacity:.7;}
+  .closing-copyright a{color:#f7f4ec;text-decoration:underline;}
 </style>
 </head>
 <body>
-
-<!-- Directional motion-blur filters used by the wheel/drag frame
-     navigation below — vertical-only blur (stdDeviation "0 N"), one
-     per scroll direction so the streak always reads as coming from
-     the direction you scrolled/dragged from. -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <filter id="motionBlurDown"><feGaussianBlur stdDeviation="0 0"/></filter>
-  <filter id="motionBlurUp"><feGaussianBlur stdDeviation="0 0"/></filter>
-</svg>
 
 <header class="nav" id="siteNav">
   <div class="nav-logo"><a href="index.html">TheXuSpace</a></div>
@@ -338,12 +327,9 @@
       </a>
     </div>
     <a class="all-collections-link" href="collections.html">See All Collections</a>
+    <p class="closing-copyright">All photography on this page is shot and &copy; Peter Xu. Want to see more of the work, license a photo, or just talk shop? I'd love to chat &mdash; <a href="mailto:thexuspace@gmail.com">thexuspace@gmail.com</a></p>
   </div>
 </div>
-
-<footer>
-  <p>All photography on this page is shot and &copy; Peter Xu. Want to see more of the work, license a photo, or just talk shop? I'd love to chat &mdash; <a href="mailto:thexuspace@gmail.com" style="color:#f7f4ec;text-decoration:underline;">thexuspace@gmail.com</a></p>
-</footer>
 
 <!-- Quiet background music while scrolling — a real, licensed audio
      file (no video, no player chrome). Starts paused; the toggle
@@ -476,19 +462,15 @@
 
   // ---- Frame-by-frame navigation: mouse wheel and click-drag both
   // move exactly one frame at a time (matching the trackpad's
-  // one-swipe-one-frame feel), with a directional motion blur that
-  // trails the scroll and clears over the last ~20% of the move.
-  // Touch devices are left alone — they keep native momentum scroll
-  // and CSS scroll-snap as before. ----
+  // one-swipe-one-frame feel). Touch devices are left alone — they
+  // keep native momentum scroll and CSS scroll-snap as before. ----
   (function(){
-    const frames = Array.from(document.querySelectorAll('.stop, .closing, footer'));
+    const frames = Array.from(document.querySelectorAll('.stop, .closing'));
     if(frames.length < 2) return;
 
     let current = 0;
     let animating = false;
     const DURATION = 850; // ms
-    const CLEAR_BY = 0.8; // blur is fully cleared by 80% through the move (last 20% = clean settle)
-    const PEAK_BLUR = 26; // px, vertical-only
 
     function nearestFrameIndex(){
       let best = 0, bestDist = Infinity;
@@ -504,31 +486,22 @@
       return t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t + 2, 2) / 2;
     }
 
-    function scrollToFrame(targetIndex, dir){
-      const fromEl = frames[current];
+    function scrollToFrame(targetIndex){
       const toEl = frames[targetIndex];
-      const filterId = dir > 0 ? 'motionBlurDown' : 'motionBlurUp';
-      const fe = document.querySelector('#' + filterId + ' feGaussianBlur');
       const targetY = toEl.getBoundingClientRect().top + window.scrollY;
       const startY = window.scrollY;
       const distance = targetY - startY;
       const start = performance.now();
 
-      [fromEl, toEl].forEach(el => { if(el) el.style.filter = `url(#${filterId})`; });
       animating = true;
 
       function step(now){
         const t = Math.min(1, (now - start) / DURATION);
         window.scrollTo(0, startY + distance * easeInOutQuad(t));
 
-        const blurT = Math.min(1, t / CLEAR_BY);
-        const blurVal = PEAK_BLUR * (1 - blurT);
-        if(fe) fe.setAttribute('stdDeviation', `0 ${Math.max(0, blurVal).toFixed(2)}`);
-
         if(t < 1){
           requestAnimationFrame(step);
         } else {
-          [fromEl, toEl].forEach(el => { if(el) el.style.filter = 'none'; });
           current = targetIndex;
           animating = false;
         }
@@ -536,17 +509,17 @@
       requestAnimationFrame(step);
     }
 
-    function goTo(targetIndex, dir){
+    function goTo(targetIndex){
       const clamped = Math.max(0, Math.min(frames.length - 1, targetIndex));
       if(clamped === current || animating) return;
-      scrollToFrame(clamped, dir);
+      scrollToFrame(clamped);
     }
 
     // Mouse wheel: any single wheel tick/gesture moves exactly one frame.
     window.addEventListener('wheel', (e) => {
       e.preventDefault();
       if(animating) return;
-      goTo(current + (e.deltaY > 0 ? 1 : -1), e.deltaY > 0 ? 1 : -1);
+      goTo(current + (e.deltaY > 0 ? 1 : -1));
     }, { passive: false });
 
     // Click-and-drag: press, drag past a threshold, release — moves
@@ -575,7 +548,7 @@
       const THRESHOLD = 60;
       if(Math.abs(deltaY) < THRESHOLD || animating) return;
       const dir = deltaY < 0 ? 1 : -1;
-      goTo(current + dir, dir);
+      goTo(current + dir);
     });
 
     window.addEventListener('resize', () => { if(!animating) current = nearestFrameIndex(); });
