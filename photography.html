@@ -158,11 +158,11 @@
      chapter's frame instead of a padding-sized block. */
   .closing{position:relative;min-height:100vh;padding:0 clamp(20px,6vw,80px);text-align:center;overflow:hidden;background:#141019;scroll-snap-align:start;}
   .closing-mosaic{position:absolute;inset:0;display:flex;flex-direction:column;z-index:0;}
-  .closing-mosaic div{flex:1 1 auto;width:100%;background-size:cover;background-position:center;filter:grayscale(.1) brightness(.85);}
+  .closing-mosaic div{flex:1 1 auto;width:100%;background-size:cover;background-position:center;filter:grayscale(.1) brightness(.75);}
   .closing-scrim{position:absolute;inset:0;background:linear-gradient(180deg, rgba(12,9,15,.35) 0%, rgba(12,9,15,.68) 100%);z-index:1;}
-  /* Sits over the 3rd closing-mosaic strip (the black-and-white
-     architecture photo), horizontally centered. */
-  .closing-inner{position:absolute;left:50%;top:62%;transform:translate(-50%,-50%);z-index:2;width:100%;max-width:640px;padding:0 20px;margin:0;}
+  /* Sits near the top of the 1st closing-mosaic strip, horizontally
+     centered. */
+  .closing-inner{position:absolute;left:50%;top:9%;transform:translate(-50%,-50%);z-index:2;width:100%;max-width:640px;padding:0 20px;margin:0;}
   .all-collections-link{display:inline-block;margin-top:0;font-size:15px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#f7f4ec;opacity:.8;border-bottom:1px solid rgba(247,244,236,.4);padding-bottom:3px;transition:all .2s ease;}
   .all-collections-link:hover{color:var(--accent);border-color:var(--accent);opacity:1;}
 
@@ -171,9 +171,9 @@
   .social-btn:hover{border-color:var(--accent);color:var(--accent);}
   .social-btn svg{width:15px;height:15px;flex:none;}
 
-  /* Sits over the bottom of the last closing-mosaic strip (the
-     mountain goat photo), horizontally centered. */
-  .closing-contact{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);z-index:2;width:100%;max-width:520px;padding:0 20px;text-align:center;}
+  /* Sits over the 3rd closing-mosaic strip (the black-and-white
+     architecture photo), horizontally centered. */
+  .closing-contact{position:absolute;left:50%;top:62%;transform:translate(-50%,-50%);z-index:2;width:100%;max-width:520px;padding:0 20px;text-align:center;}
   .closing-contact p{font-size:11px;line-height:1.6;color:#f7f4ec;margin:0;text-shadow:0 1px 10px rgba(0,0,0,.6);}
   .closing-contact .closing-copyright-line{opacity:.8;margin-bottom:6px;}
   .closing-contact .closing-cta-line{opacity:.8;margin-bottom:16px;}
