@@ -61,9 +61,6 @@
   #nowPlaying{flex:none;max-width:220px;font-size:12px;color:var(--text-dim);letter-spacing:.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   #nowPlaying b{color:var(--text);font-weight:600;}
 
-  #note{position:fixed;top:80px;left:0;right:0;z-index:10;text-align:center;font-size:11px;color:var(--text-dim);letter-spacing:.03em;padding:0 24px;opacity:0;transition:opacity 1s ease .3s;}
-  #note.show{opacity:1;}
-
   @media(max-width:640px){
     #nowPlaying{display:none;}
     #trackPanel{width:180px;}
@@ -81,8 +78,6 @@
 </header>
 
 <canvas id="viz"></canvas>
-
-<div id="note">Prototype visualizer — running a generated techno pulse live in your browser. Your real recorded sets will replace this once they're added.</div>
 
 <div id="trackPanel">
   <div class="panel-label">Sets</div>
@@ -119,16 +114,18 @@
   resize(); addEventListener('resize', resize);
 
   // ---- Set list — add new recorded sets here as they're uploaded ----
+  // "style" picks the visualizer treatment: 'ring' is the original red
+  // pulsing circle, 'blackhole' is the void/purple treatment.
   const TRACKS = [
-    { file: '72626.mp3', name: '0726 RC1' },
-    { file: '0817.m4a', name: '0817 RC2' }
+    { file: '72626.mp3', name: '0726 RC1', style: 'ring' },
+    { file: '0826 RC2.m4a', name: '0817 RC2', style: 'blackhole' }
   ];
+  let currentStyle = 'ring';
 
   const navHeader = document.querySelector('header.nav');
   const gate = document.getElementById('gate');
   const enterBtn = document.getElementById('enterBtn');
   const bar = document.getElementById('bar');
-  const note = document.getElementById('note');
   const muteBtn = document.getElementById('muteBtn');
   const playBtn = document.getElementById('playBtn');
   const curTimeEl = document.getElementById('curTime');
@@ -147,68 +144,6 @@
   let currentTrackIndex = -1;
   let trimStart = 0;
   let draggingSeek = false;
-
-  // ===================== Synthesized fallback techno pulse =====================
-  let synthTimer = null;
-  function startSynthLoop(){
-    const bpm = 128;
-    const stepTime = 60 / bpm / 4;
-    let step = 0;
-
-    function kick(t){
-      const o = audioCtx.createOscillator();
-      const g = audioCtx.createGain();
-      o.type = 'sine';
-      o.frequency.setValueAtTime(120, t);
-      o.frequency.exponentialRampToValueAtTime(38, t + 0.12);
-      g.gain.setValueAtTime(1, t);
-      g.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
-      o.connect(g); g.connect(masterGain);
-      o.start(t); o.stop(t + 0.3);
-    }
-    function hat(t, vol){
-      const bufferSize = audioCtx.sampleRate * 0.05;
-      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for(let i=0;i<bufferSize;i++) data[i] = (Math.random()*2-1);
-      const noise = audioCtx.createBufferSource();
-      noise.buffer = buffer;
-      const hp = audioCtx.createBiquadFilter();
-      hp.type = 'highpass'; hp.frequency.value = 7000;
-      const g = audioCtx.createGain();
-      g.gain.setValueAtTime(vol, t);
-      g.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
-      noise.connect(hp); hp.connect(g); g.connect(masterGain);
-      noise.start(t); noise.stop(t + 0.06);
-    }
-    function bass(t, freq){
-      const o = audioCtx.createOscillator();
-      const g = audioCtx.createGain();
-      o.type = 'sawtooth';
-      o.frequency.value = freq;
-      const lp = audioCtx.createBiquadFilter();
-      lp.type = 'lowpass'; lp.frequency.value = 400;
-      g.gain.setValueAtTime(0.25, t);
-      g.gain.exponentialRampToValueAtTime(0.001, t + stepTime*0.9);
-      o.connect(lp); lp.connect(g); g.connect(masterGain);
-      o.start(t); o.stop(t + stepTime);
-    }
-
-    const bassNotes = [55, 55, 82.4, 55, 55, 55, 73.4, 65.4];
-    let nextTime = audioCtx.currentTime + 0.1;
-    function scheduler(){
-      while(nextTime < audioCtx.currentTime + 0.2){
-        const s = step % 16;
-        if(s % 4 === 0) kick(nextTime);
-        if(s % 2 === 1) hat(nextTime, s % 4 === 3 ? 0.5 : 0.25);
-        if(s % 8 === 0) bass(nextTime, bassNotes[(step/8|0) % bassNotes.length]);
-        nextTime += stepTime;
-        step++;
-      }
-    }
-    scheduler();
-    synthTimer = setInterval(scheduler, 60);
-  }
 
   // ===================== Audio graph =====================
   function initAudioGraph(){
@@ -287,23 +222,20 @@
     const t = TRACKS[index];
     if(!t) return;
     currentTrackIndex = index;
+    currentStyle = t.style || 'ring';
     renderTrackList();
     nowPlayingName.textContent = t.name;
 
     // Stop absolutely everything that could be making sound before the
-    // new track starts — the synth fallback, the previous media source,
-    // and the previous audio element — so two sources can never overlap.
-    if(synthTimer){ clearInterval(synthTimer); synthTimer = null; }
+    // new track starts — the previous media source and audio element —
+    // so two sources can never overlap.
     if(mediaSrc){ try{ mediaSrc.disconnect(); }catch(e){} mediaSrc = null; }
     if(el){ el.pause(); el.src = ''; el = null; }
     usingRealSet = false;
 
     const exists = await hasRealSet(t.file);
     if(!exists){
-      usingRealSet = false;
-      note.classList.add('show');
-      if(!synthTimer) startSynthLoop();
-      playBtn.textContent = '❚❚';
+      nowPlayingName.textContent = t.name + ' (file not found)';
       refreshPlayingState();
       return;
     }
@@ -316,7 +248,6 @@
     mediaSrc = audioCtx.createMediaElementSource(el);
     mediaSrc.connect(masterGain);
     usingRealSet = true;
-    note.classList.remove('show');
 
     el.addEventListener('loadedmetadata', () => {
       if(trimStart > 0 && trimStart < el.duration) el.currentTime = trimStart;
@@ -337,8 +268,7 @@
   // Fades the top nav + bottom transport bar to 30% while music is audibly
   // playing; hovering either bar (or pausing/muting) brings it back.
   function isAudioAudible(){
-    if(usingRealSet && el) return !el.paused && !muted;
-    return !!synthTimer && !muted;
+    return usingRealSet && el && !el.paused && !muted;
   }
   function refreshPlayingState(){
     const playing = isAudioAudible();
@@ -372,10 +302,6 @@
     if(usingRealSet && el){
       if(el.paused){ el.play(); playBtn.textContent = '❚❚'; }
       else { el.pause(); playBtn.textContent = '▶'; }
-    } else {
-      muted = !muted;
-      if(masterGain) masterGain.gain.value = muted ? 0 : 0.7;
-      playBtn.textContent = muted ? '▶' : '❚❚';
     }
     refreshPlayingState();
   });
@@ -459,24 +385,54 @@
     }
   }
 
-  let wordEnvelope = 0; // fast attack, slow decay — gives the wordmark a trailing fade instead of flickering per-frame
-  let zoomEnvelope = 0; // same fast-attack/slow-decay shape, drives the dolly-zoom push on bass hits
-  function draw(){
-    requestAnimationFrame(draw);
-    if(!analyser) return;
-    analyser.getByteFrequencyData(freqData);
+  // ===================== Original "ring" visualizer (track 1) =====================
+  // The very first look: a pulsing red circle, a rotating ring of white
+  // particles, and a thin frequency-outline ring. Untouched from the
+  // original build — restored as its own function, exclusive to track 1.
+  function drawRingStyle(cx, cy, baseR, t, bass, mid, treble){
+    ctx.fillStyle = 'rgba(5,5,5,0.28)';
+    ctx.fillRect(0,0,W,H);
 
-    const bass = avg(freqData, 0, 8) / 255;
-    const mid  = avg(freqData, 8, 40) / 255;
-    const treble = avg(freqData, 40, 100) / 255;
+    const r = baseR + bass * baseR * 1.8;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI*2);
+    ctx.strokeStyle = `rgba(140,8,9,${0.35 + bass*0.5})`;
+    ctx.lineWidth = 2 + bass*6;
+    ctx.stroke();
 
+    const n = 48;
+    for(let i=0;i<n;i++){
+      const a = (i/n) * Math.PI*2 + t;
+      const rad = baseR * 2.1 + mid * 120 + Math.sin(a*3 + t*2) * treble * 60;
+      const x = cx + Math.cos(a) * rad;
+      const y = cy + Math.sin(a) * rad;
+      const size = 1.5 + treble * 5;
+      ctx.beginPath();
+      ctx.arc(x, y, size, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(255,255,255,${0.15 + treble*0.6})`;
+      ctx.fill();
+    }
+
+    ctx.beginPath();
+    for(let i=0;i<freqData.length;i++){
+      const a2 = (i/freqData.length) * Math.PI*2;
+      const rad2 = baseR*3.2 + (freqData[i]/255) * 90;
+      const x2 = cx + Math.cos(a2) * rad2;
+      const y2 = cy + Math.sin(a2) * rad2;
+      if(i===0) ctx.moveTo(x2,y2); else ctx.lineTo(x2,y2);
+    }
+    ctx.closePath();
+    ctx.strokeStyle = 'rgba(140,8,9,0.25)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // ===================== "Black hole" visualizer (track 2) =====================
+  function drawBlackHoleStyle(cx, cy, baseR, bass, mid, treble){
     // Trail fill tinted toward the void purple instead of flat black, so
     // the whole scene carries the color even between frames.
     ctx.fillStyle = 'rgba(8,3,14,0.30)';
     ctx.fillRect(0,0,W,H);
-
-    const cx = W/2, cy = H/2;
-    const baseR = Math.min(W,H) * 0.14;
 
     // Dolly-zoom pulse: scale the whole scene around center, snapping out
     // on a bass hit and easing back — a subtle push/pull "camera" motion
@@ -511,6 +467,30 @@
     ctx.lineWidth = 1.5 + bass*3;
     ctx.stroke();
 
+    ctx.restore(); // matches the zoom-scale save() above
+  }
+
+  let wordEnvelope = 0; // fast attack, slow decay — gives the wordmark a trailing fade instead of flickering per-frame
+  let zoomEnvelope = 0; // same fast-attack/slow-decay shape, drives the dolly-zoom push on bass hits (black hole style only)
+  function draw(){
+    requestAnimationFrame(draw);
+    if(!analyser) return;
+    analyser.getByteFrequencyData(freqData);
+
+    const bass = avg(freqData, 0, 8) / 255;
+    const mid  = avg(freqData, 8, 40) / 255;
+    const treble = avg(freqData, 40, 100) / 255;
+
+    const cx = W/2, cy = H/2;
+    const baseR = Math.min(W,H) * 0.14;
+    const t = performance.now() * 0.0004;
+
+    if(currentStyle === 'blackhole'){
+      drawBlackHoleStyle(cx, cy, baseR, bass, mid, treble);
+    } else {
+      drawRingStyle(cx, cy, baseR, t, bass, mid, treble);
+    }
+
     // Center wordmark — accent red at a flat 70% opacity, with a fade-delay
     // envelope: it snaps up fast on a bass hit, then eases back down slowly
     // instead of flickering frame to frame with the raw signal.
@@ -528,8 +508,6 @@
     ctx.fillStyle = `rgba(140,8,9,${wordAlpha})`;
     ctx.fillText('THEXUSPACE', cx, cy);
     ctx.restore();
-
-    ctx.restore(); // matches the zoom-scale save() above
   }
   function avg(arr, start, end){
     let s=0; for(let i=start;i<end;i++) s += arr[i];
