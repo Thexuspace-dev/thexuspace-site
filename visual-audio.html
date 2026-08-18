@@ -350,11 +350,12 @@
         angle: Math.random() * Math.PI * 2,
         radius: baseR * (1.6 + Math.random() * 2.2),
         speed: 0.55 + Math.random() * 1.1,
-        len: 14 + Math.random() * 26
+        len: 40 + Math.random() * 90,
+        phase: Math.random() * Math.PI * 2
       });
     }
   }
-  function drawStreaks(cx, cy, baseR, bass, mid, treble){
+  function drawStreaks(cx, cy, baseR, t, bass, mid, treble){
     if(!streaks) initStreaks(baseR);
     const outerR = baseR * 3.9;
     const innerR = baseR * 0.95;
@@ -367,20 +368,26 @@
         s.radius = outerR;
         s.angle = Math.random() * Math.PI * 2;
       }
-      const streakLen = s.len * (0.6 + treble * 1.4);
-      const x1 = cx + Math.cos(s.angle) * s.radius;
-      const y1 = cy + Math.sin(s.angle) * s.radius;
-      const x2 = cx + Math.cos(s.angle) * (s.radius + streakLen);
-      const y2 = cy + Math.sin(s.angle) * (s.radius + streakLen);
+      // A tiny, fast vibration on top of the fall, so each streak reads
+      // as trembling rather than perfectly smooth.
+      const vibrate = Math.sin(t * 60 + s.phase) * 0.006;
+      const drawAngle = s.angle + vibrate;
+      // Stretched much longer and more dramatic than the original stubby
+      // marks, so each one reads as a real streak of light being pulled in.
+      const streakLen = s.len * (0.8 + treble * 1.8);
+      const x1 = cx + Math.cos(drawAngle) * s.radius;
+      const y1 = cy + Math.sin(drawAngle) * s.radius;
+      const x2 = cx + Math.cos(drawAngle) * (s.radius + streakLen);
+      const y2 = cy + Math.sin(drawAngle) * (s.radius + streakLen);
       const fade = Math.min(1, (s.radius - innerR) / (baseR * 1.2));
       const grad = ctx.createLinearGradient(x1, y1, x2, y2);
-      grad.addColorStop(0, `rgba(220,190,255,${0.05 + fade*0.15 + treble*0.25})`);
+      grad.addColorStop(0, `rgba(225,195,255,${0.08 + fade*0.22 + treble*0.3})`);
       grad.addColorStop(1, `rgba(200,140,255,0)`);
       ctx.beginPath();
       ctx.moveTo(x1, y1);
       ctx.lineTo(x2, y2);
       ctx.strokeStyle = grad;
-      ctx.lineWidth = 1 + treble * 1.4;
+      ctx.lineWidth = 1 + treble * 1.6;
       ctx.stroke();
     }
   }
@@ -428,7 +435,7 @@
   }
 
   // ===================== "Black hole" visualizer (track 2) =====================
-  function drawBlackHoleStyle(cx, cy, baseR, bass, mid, treble){
+  function drawBlackHoleStyle(cx, cy, baseR, t, bass, mid, treble){
     // Trail fill tinted toward the void purple instead of flat black, so
     // the whole scene carries the color even between frames.
     ctx.fillStyle = 'rgba(8,3,14,0.30)';
@@ -444,28 +451,59 @@
     ctx.scale(zoomScale, zoomScale);
     ctx.translate(-cx, -cy);
 
-    drawStreaks(cx, cy, baseR, bass, mid, treble);
+    drawStreaks(cx, cy, baseR, t, bass, mid, treble);
 
-    // Event horizon: solid black core with a void-purple glow ring around it.
+    // Event horizon: solid black core with a void-purple glow field behind it.
     const horizonR = baseR * 0.85 + bass * baseR * 0.45;
-    const glow = ctx.createRadialGradient(cx, cy, horizonR*0.55, cx, cy, horizonR*1.7);
+    const glow = ctx.createRadialGradient(cx, cy, horizonR*0.55, cx, cy, horizonR*1.9);
     glow.addColorStop(0, 'rgba(0,0,0,1)');
-    glow.addColorStop(0.55, 'rgba(0,0,0,1)');
-    glow.addColorStop(0.78, `rgba(42,0,72,${0.55 + bass*0.4})`);
-    glow.addColorStop(1, 'rgba(42,0,72,0)');
+    glow.addColorStop(0.5, 'rgba(0,0,0,1)');
+    glow.addColorStop(0.75, `rgba(160,30,225,${0.5 + bass*0.4})`);
+    glow.addColorStop(1, 'rgba(160,30,225,0)');
     ctx.beginPath();
-    ctx.arc(cx, cy, horizonR*1.7, 0, Math.PI*2);
+    ctx.arc(cx, cy, horizonR*1.9, 0, Math.PI*2);
     ctx.fillStyle = glow;
     ctx.fill();
     ctx.beginPath();
     ctx.arc(cx, cy, horizonR, 0, Math.PI*2);
     ctx.fillStyle = '#000';
     ctx.fill();
-    ctx.beginPath();
-    ctx.arc(cx, cy, horizonR, 0, Math.PI*2);
-    ctx.strokeStyle = `rgba(190,120,255,${0.4 + bass*0.5})`;
-    ctx.lineWidth = 1.5 + bass*3;
-    ctx.stroke();
+
+    // Inner ring — 45% base opacity, layered strokes stepping down in radius
+    // and fading out to fake a motion blur pulling inward toward the core.
+    ctx.save();
+    ctx.shadowBlur = 18 + bass*20;
+    ctx.shadowColor = 'rgba(215,70,255,0.9)';
+    const innerSteps = 5;
+    for(let i=0;i<innerSteps;i++){
+      const step = i / (innerSteps-1);
+      const r = horizonR * (1 - step*0.18);
+      const a = 0.45 * (1 - step) + bass*0.15;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI*2);
+      ctx.strokeStyle = `rgba(225,100,255,${a})`;
+      ctx.lineWidth = 2.2 - step*1.2;
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // Outer ring — layered strokes stepping up in radius and fading out to
+    // fake a motion blur pulling outward, saturated blacklight neon glow.
+    ctx.save();
+    ctx.shadowBlur = 24 + bass*26;
+    ctx.shadowColor = 'rgba(185,85,255,1)';
+    const outerSteps = 6;
+    for(let i=0;i<outerSteps;i++){
+      const step = i / (outerSteps-1);
+      const r = horizonR * (1.1 + step*0.36) + bass*baseR*0.3;
+      const a = (0.55 + bass*0.4) * (1 - step*0.85);
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI*2);
+      ctx.strokeStyle = `rgba(205,120,255,${a})`;
+      ctx.lineWidth = 2.6 - step*1.6;
+      ctx.stroke();
+    }
+    ctx.restore();
 
     ctx.restore(); // matches the zoom-scale save() above
   }
@@ -485,27 +523,42 @@
     const baseR = Math.min(W,H) * 0.14;
     const t = performance.now() * 0.0004;
 
-    if(currentStyle === 'blackhole'){
-      drawBlackHoleStyle(cx, cy, baseR, bass, mid, treble);
+    const isBlackhole = currentStyle === 'blackhole';
+    if(isBlackhole){
+      drawBlackHoleStyle(cx, cy, baseR, t, bass, mid, treble);
     } else {
       drawRingStyle(cx, cy, baseR, t, bass, mid, treble);
     }
 
-    // Center wordmark — accent red at a flat 70% opacity, with a fade-delay
-    // envelope: it snaps up fast on a bass hit, then eases back down slowly
-    // instead of flickering frame to frame with the raw signal.
+    // Center wordmark — accent red, with a fade-delay envelope: it snaps up
+    // fast on a bass hit, then eases back down slowly instead of flickering
+    // frame to frame with the raw signal. Base opacity is 70% on the ring
+    // style (track 1, untouched) and 85% on the black hole style (track 2),
+    // so the wordmark reads as the dominant "main character" over the ring.
     if(bass > wordEnvelope){
       wordEnvelope = bass;
     } else {
       wordEnvelope *= 0.94;
     }
-    const wordAlpha = 0.7 * (0.5 + 0.5 * wordEnvelope);
+    const wordBaseAlpha = isBlackhole ? 0.85 : 0.7;
+    const wordAlpha = wordBaseAlpha * (0.5 + 0.5 * wordEnvelope);
     const wordSize = Math.min(W, H) * (0.075 + wordEnvelope * 0.012);
     ctx.save();
     ctx.font = `800 ${wordSize}px -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = `rgba(140,8,9,${wordAlpha})`;
+    if(isBlackhole){
+      // Constant dolly-zoom pulse on the wordmark itself: a continuous sine
+      // scale, always running (not gated by bass), anchored at its own
+      // center so it grows/shrinks as if approaching the viewer without
+      // actually moving position. Black hole style only — track 1's
+      // wordmark stays exactly as it was.
+      const dolly = 1 + Math.sin(t * 3.2) * 0.07;
+      ctx.translate(cx, cy);
+      ctx.scale(dolly, dolly);
+      ctx.translate(-cx, -cy);
+    }
     ctx.fillText('THEXUSPACE', cx, cy);
     ctx.restore();
   }
